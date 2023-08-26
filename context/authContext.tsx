@@ -5,6 +5,7 @@ import { Platform } from "react-native";
 
 interface AuthContextType {
   user: any;
+  setUser: any;
   loading: boolean;
   error: string | null;
   signIn: (username: string, password: string) => Promise<void>;
@@ -40,11 +41,11 @@ function useProtectedRoute(user: any) {
 
       if (Platform.OS === 'ios') {
         setTimeout(() => {
-          router.replace("/sign_in");
+          router.replace("/(auth)/sign_in");
         }, 1)
       } else {
         setImmediate(() => {
-          router.replace("/sign_in");
+          router.replace("/(auth)/sign_in");
         })
       }
     } else if (user && inAuthGroup) {
@@ -91,7 +92,7 @@ export const Provider: React.FC<AuthProviderProps> = ({ children }) => {
       setError(null);
       await Auth.signIn(username, password);
       checkUser();
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message || "An error occurred");
     } finally {
       setLoading(false);
@@ -104,7 +105,7 @@ export const Provider: React.FC<AuthProviderProps> = ({ children }) => {
       setError(null);
       await Auth.signOut();
       setUser(null);
-    } catch (error) {
+    } catch (error: any) {
       setError(error.message || "An error occurred");
     } finally {
       setLoading(false);
@@ -113,6 +114,7 @@ export const Provider: React.FC<AuthProviderProps> = ({ children }) => {
 
   const contextValue: AuthContextType = {
     user,
+    setUser,
     loading,
     error,
     signIn,

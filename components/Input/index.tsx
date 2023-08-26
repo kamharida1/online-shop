@@ -2,9 +2,9 @@ import { memo, forwardRef } from "react";
 import { Platform, StyleSheet, Text, TextInput, View } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 
-import Colors from "../../constants/Colors";
-import { W } from "../../constants/Dimensions";
 import { FormikTouched, FormikErrors } from "formik";
+import { W, dimGray, primary } from "../../constants";
+import { Space } from "../Space";
 
 
 const styles = StyleSheet.create({
@@ -23,11 +23,11 @@ const styles = StyleSheet.create({
 });
 
 interface InputT {
-  name: string;
-  value: string;
+  name?: string;
+  value?: string;
   placeholder?: string;
-  errors: any;
-  touched: any;
+  errors?: any;
+  touched?: any;
   onChangeText?: (e: string) => void;
   onBlur?: () => void;
   multiline?: boolean;
@@ -66,25 +66,27 @@ const Input = memo<InputT>(
     autoCapitalize
   }) => {
     const { inputStyle, errorStyle } = styles
-    const { primary, dimGray, danger } = Colors.light
 
     const input = [
       inputStyle,
       {
         fontFamily: "AirMedium",
+        paddingLeft: 5,
         color: primary,
         borderBottomColor: primary,
-        fontSize: Platform.OS === "ios" ? "15@s" : "15@s",
+        fontSize: Platform.OS === "ios" ? "13@s" : "13@s",
+        paddingBottom: 5,
+        
       },
-    ]
+    ];
 
     const placeholderStyle = [
       inputStyle,
       {
         fontFamily: "AirLight",
         color: primary,
-        borderBottomColor: primary,
-        fontSize: Platform.OS === "ios" ? "15@s" : "15@s",
+        borderBottomColor: dimGray,
+        fontSize: Platform.OS === "ios" ? "13@s" : "13@s",
       },
     ]
     
@@ -92,24 +94,25 @@ const Input = memo<InputT>(
       <>
         <TextInput
           style={ScaledSheet.create(
-            value.length === 0 ? placeholderStyle : input
+            value?.length === 0 ? placeholderStyle : input
           )}
           value={value}
           onChangeText={onChangeText}
           onBlur={onBlur}
           placeholder={placeholder}
-          placeholderTextColor={dimGray}
+          placeholderTextColor={`#888`}
           secureTextEntry={secureTextEntry}
           keyboardType={keyboardType}
           autoCapitalize={autoCapitalize}
           multiline={multiline}
           numberOfLines={numberOfLines}
         />
-        {touched[name] && errors[name] ? (
+        <Space height={40} />
+        {/* {touched[name] && errors[name] ? (
           <Text style={errorStyle}>{errors[name]}</Text>
         ) : (
           <Text style={errorStyle}>{"  "}</Text>
-        )}
+        )} */}
       </>
     );
   })

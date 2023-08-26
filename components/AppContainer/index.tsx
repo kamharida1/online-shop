@@ -45,10 +45,11 @@ const AppContainer = memo<AppContainerT>(
     title,
     loading = false
   }) => {
+    const MyView = !title ? View : SafeAreaView
     const { container, sub } = styles
   return (
     <KeyboardShift>
-      <SafeAreaView style={[container, { backgroundColor: "white" }]}>
+      <MyView style={[container, { backgroundColor: "white" }]}>
         {/* <StatusBarAlert
           visible={message !== ""}
           message={message}
@@ -84,7 +85,7 @@ const AppContainer = memo<AppContainerT>(
             </>
           )}
         </>
-      </SafeAreaView>
+      </MyView>
     </KeyboardShift>
   );
   })

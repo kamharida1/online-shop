@@ -1,49 +1,51 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { Link, Tabs } from 'expo-router';
-import { Pressable, useColorScheme } from 'react-native';
-
-import Colors from '../../constants/Colors';
-
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { Tabs } from "expo-router";
+import { dimGray, tint } from "../../constants";
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
  */
 function TabBarIcon(props: {
-  name: React.ComponentProps<typeof FontAwesome>['name'];
+  name: React.ComponentProps<typeof FontAwesome>["name"];
   color: string;
 }) {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
-
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerShown: false
+        tabBarActiveTintColor: tint,
+        tabBarInactiveTintColor: dimGray,
+        headerShown: false,
       }}
     >
       <Tabs.Screen
-        name="index"
+        name="home"
         options={{
-          title: "Home",
+          title: "Products",
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
-          headerRight: () => (
-            <Link href="/modal" asChild>
-              <Pressable>
-                {({ pressed }) => (
-                  <FontAwesome
-                    name="info-circle"
-                    size={25}
-                    color={Colors[colorScheme ?? "light"].text}
-                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
-                  />
-                )}
-              </Pressable>
-            </Link>
-          ),
+          // headerRight: () => (
+          //   <Link href="/compose" asChild>
+          //     <Pressable style={tw`flex-row items-center`}>
+          //       {({ pressed }) => (
+          //         <>
+          //           <Txt
+          //             body3
+          //             title="Add Product"
+          //             textStyle={tw`mr-2`}
+          //           />
+          //           <FontAwesome
+          //             name="plus"
+          //             size={23}
+          //             color="#555"
+          //             style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+          //           />
+          //         </>
+          //       )}
+          //     </Pressable>
+          //   </Link>
+          // ),
         }}
       />
       <Tabs.Screen

@@ -3,7 +3,6 @@ import { ReactElement, useState } from "react";
 import * as Yup from "yup";
 import * as SecureStore from 'expo-secure-store'
 import { Redirect, useNavigation, useRouter } from "expo-router";
-import { goBack } from "../../constants/Dimensions";
 import { AppContainer } from "../../components/AppContainer";
 import { Formik } from "formik";
 import { Space } from "../../components/Space";
@@ -12,10 +11,12 @@ import { TextError } from "../../components/TextError";
 import { ButtonLink } from "../../components/ButtonLink";
 import { Button } from "../../components/Button";
 import { useAuth } from "../../context/authContext";
+import { goBack } from "../../constants";
 
 export default function SignIn() {
   const [userInfo, setUserInfo] = useState({ email: '', password: '' })
-   const { loading, error, signIn } = useAuth();
+
+  const { loading, error, signIn } = useAuth();
 
   const router = useRouter();
   const navigation = useNavigation();

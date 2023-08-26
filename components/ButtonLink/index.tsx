@@ -31,7 +31,7 @@ const ButtonLink = memo<ButtonLinkT>(
     const { container, h } = styles;
     return (
       <TouchableOpacity onPress={onPress} style={[container, viewStyle]}>
-        <Txt h2 title={title} textStyle={[h, textStyle]} />
+        <Txt h3 title={title} textStyle={[h, textStyle]} />
       </TouchableOpacity>
     );
   }

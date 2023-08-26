@@ -1,70 +1,101 @@
 import React, { useState } from "react";
-import { TextInput, TextInputProps } from "react-native";
-import Animated, {
-  Easing,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-} from "react-native-reanimated";
+import {
+  View,
+  TextInput as RNTextInput,
+  StyleSheet,
+  Animated,
+} from "react-native";
 
-interface CustomTextInputProps extends TextInputProps {
-  error?: string;
-  onBlur?: () => void;
-  onFocus?: () => void;
+interface AnimatedTextInputProps {
+  borderColor?: string;
+  borderRadius?: number;
+  shadowColor?: string;
 }
 
-const CustomTextInput: React.FC<CustomTextInputProps> = ({
-  onFocus,
-  onBlur,
-  error,
-  ...restProps
+const AnimatedTextInput: React.FC<AnimatedTextInputProps> = ({
+  borderColor = "#ccc",
+  borderRadius = 8,
+  shadowColor = "#000",
 }) => {
   const [isFocused, setIsFocused] = useState(false);
-  const placeholderY = useSharedValue(restProps.value ? -20 : 0);
+  const borderWidth = isFocused ? 2 : 1;
+  const inputBorderColor = isFocused ? "blue" : borderColor;
+
+  const shadowOpacity = isFocused ? 0.2 : 0.1;
+  const shadowOffset = {
+    width: 0,
+    height: isFocused ? 3 : 1,
+  };
+
+  const placeholderTranslateY = new Animated.Value(isFocused ? -20 : 0);
+  const placeholderColor = isFocused ? inputBorderColor : "#999";
 
   const handleFocus = () => {
     setIsFocused(true);
-    if (onFocus) onFocus();
-    placeholderY.value = withTiming(-20, {
+    Animated.timing(placeholderTranslateY, {
+      toValue: -20,
       duration: 200,
-      easing: Easing.ease,
-    });
+      useNativeDriver: false,
+    }).start();
   };
 
   const handleBlur = () => {
     setIsFocused(false);
-    if (onBlur) onBlur();
-    placeholderY.value = withTiming(0, { duration: 200, easing: Easing.ease });
+    Animated.timing(placeholderTranslateY, {
+      toValue: 0,
+      duration: 200,
+      useNativeDriver: false,
+    }).start();
   };
 
-  const animatedStyles = useAnimatedStyle(() => ({
-    borderBottomColor: error ? "red" : isFocused ? "blue" : "black",
-    transform: [{ translateY: placeholderY.value }],
-  }));
+  const animatedStyle = {
+    borderColor: inputBorderColor,
+    borderWidth,
+    borderRadius,
+    shadowColor,
+    shadowOpacity,
+    shadowOffset,
+  };
 
   return (
-    <Animated.View style={[{ marginBottom: 10 }, animatedStyles]}>
-      <TextInput
-        {...restProps}
+    <Animated.View style={[styles.container, animatedStyle]}>
+      <Animated.Text
+        style={[
+          styles.placeholder,
+          {
+            transform: [{ translateY: placeholderTranslateY }],
+            color: placeholderColor,
+          },
+        ]}
+      >
+        Enter text...
+      </Animated.Text>
+      <RNTextInput
+        style={styles.input}
         onFocus={handleFocus}
         onBlur={handleBlur}
-        style={{
-          borderBottomWidth: 1,
-          paddingVertical: 8,
-        }}
+        placeholder=""
       />
-      <Animated.Text
-        style={{
-          position: "absolute",
-          left: 0,
-          top: 0,
-          fontSize: 16,
-        }}
-      >
-        {restProps.placeholder}
-      </Animated.Text>
     </Animated.View>
   );
 };
 
-export default CustomTextInput;
+const styles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 10,
+    paddingVertical: 20,
+    backgroundColor: "white",
+    width: "100%",
+  },
+  input: {
+    flex: 1,
+  },
+  placeholder: {
+    position: "absolute",
+    left: 12,
+    top: 14,
+    backgroundColor: "transparent",
+  },
+});
+
+export default AnimatedTextInput;

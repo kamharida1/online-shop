@@ -1,8 +1,4 @@
-input AMPLIFY {
-  globalAuthRule: AuthRule = { allow: public }
-}
-
-type Product @model {
+type Product @model @auth(rules: [{allow: public}, {allow: owner}]) {
   id: ID!
   title: String!
   description: String
@@ -17,9 +13,11 @@ type Product @model {
   oldPrice: Float
   CartProduct: CartProduct @hasOne
   OrderProduct: OrderProduct @hasOne
+  productDetails: AWSJSON
+  subtype: String
 }
 
-type CartProduct @model {
+type CartProduct @model @auth(rules: [{allow: public}, {allow: owner}]) {
   id: ID!
   userSub: String!
   quantity: Int!
@@ -28,7 +26,7 @@ type CartProduct @model {
   product: Product @belongsTo(fields: ["productID"])
 }
 
-type OrderProduct @model {
+type OrderProduct @model @auth(rules: [{allow: public}, {allow: owner}]) {
   id: ID!
   quantity: Int!
   option: String
@@ -38,16 +36,16 @@ type OrderProduct @model {
   order: Order @belongsTo(fields: ["orderID"])
 }
 
-type Order @model  {
+type Order @model @auth(rules: [{allow: public}, {allow: owner}]) {
   id: ID!
   userSub: String!
   amount: Float
   addressID: ID!
-  address: Address @hasOne(fields: ["addressID"])
+  address: Address @hasOne
   OrderProduct: OrderProduct @hasOne
 }
 
-type Address @model {
+type Address @model @auth(rules: [{allow: public}, {allow: owner}]) {
   id: ID!
   fullName: String!
   street: String!
@@ -57,4 +55,4 @@ type Address @model {
   country: String!
   isSelected: Boolean
   userSub: String!
-}
+} 

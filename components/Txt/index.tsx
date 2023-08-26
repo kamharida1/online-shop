@@ -2,10 +2,7 @@ import { memo } from "react";
 import { Platform, StyleProp, Text, TextStyle, ViewStyle, StyleSheet } from "react-native";
 import { ScaledSheet } from "react-native-size-matters";
 import { ifIphoneX } from "react-native-iphone-x-helper";
-
-import Colors from '../../constants/Colors'
-
-const {primary, secondary, dimGray, lightGray} = Colors.light;
+import { dimGray } from "../../constants";
 
 const styles = ScaledSheet.create({
   h0Style: {
@@ -38,7 +35,7 @@ const styles = ScaledSheet.create({
     fontFamily: "AirBlack",
   },
   buttonStyle: {
-    fontSize: Platform.OS === "ios" ? "15@s" : "15@s",
+    fontSize: Platform.OS === "ios" ? "13@s" : "13@s",
     //color: "rgba(0,0,0,0)",
     fontFamily: "AirBold",
   },
@@ -46,14 +43,31 @@ const styles = ScaledSheet.create({
     textAlign: "left",
     ...ifIphoneX(
       {
-        fontSize: Platform.OS === "ios" ? "16@s" : "16@s",
+        fontSize: Platform.OS === "ios" ? "13@s" : "13@s",
       },
-      {
-        fontSize: Platform.OS === "ios" ? "16@s" : "16@s",
-      }
     ),
     color: dimGray,
-    fontFamily: "AirBold",
+    fontFamily: "AirMedium",
+  },
+  bodyStyle2: {
+    textAlign: "left",
+    ...ifIphoneX(
+      {
+        fontSize: Platform.OS === "ios" ? "13@s" : "13@s",
+      },
+    ),
+    color: "black",
+    fontFamily: "AirBlack",
+  },
+  bodyStyle3: {
+    textAlign: "left",
+    ...ifIphoneX(
+      {
+        fontSize: Platform.OS === "ios" ? "13@s" : "13@s",
+      },
+    ),
+    color: "black",
+    fontFamily: "AirMedium",
   },
 });
 
@@ -65,6 +79,8 @@ interface TxtT {
   h4?: boolean
   h5?: boolean
   body?: boolean;
+  body2?: boolean;
+  body3?: boolean;
   button?: boolean;
   title: string;
   numberOfLines?: number;
@@ -74,7 +90,7 @@ interface TxtT {
 }
 
 const Txt = memo<TxtT>(
-  ({ h0, h1, h2, h3, h4, h5, body, button, title, numberOfLines, ellipsizeMode, textStyle, viewStyle }) => {
+  ({ h0, h1, h2, h3, h4, h5, body, body2, body3, button, title, numberOfLines, ellipsizeMode, textStyle, viewStyle }) => {
     const {
       h0Style,
       h1Style,
@@ -83,6 +99,8 @@ const Txt = memo<TxtT>(
       h4Style,
       h5Style,
       bodyStyle,
+      bodyStyle2,
+      bodyStyle3,
       buttonStyle,
     } = styles
     return (
@@ -98,6 +116,8 @@ const Txt = memo<TxtT>(
           h4 && StyleSheet.flatten(h4Style),
           h5 && StyleSheet.flatten(h5Style),
           body && StyleSheet.flatten(bodyStyle),
+          body2 && StyleSheet.flatten(bodyStyle2),
+          body3 && StyleSheet.flatten(bodyStyle3),
           button && StyleSheet.flatten(buttonStyle)
         ]}
       >

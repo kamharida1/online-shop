@@ -17,6 +17,9 @@
       },
       "auth": {
         "onlineshopd46dc0f3": {}
+      },
+      "storage": {
+        "s3onlineshopstorage9142dc3e": {}
       }
     }
   }

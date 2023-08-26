@@ -5,10 +5,10 @@ import * as Yup from "yup";
 import { Formik } from "formik";
 
 import { AppContainer } from "../../components/AppContainer";
-import { goBack } from "../../constants/Dimensions";
 import { Input } from "../../components/Input";
 import { Space } from "../../components/Space";
 import { Button } from "../../components/Button";
+import { goBack } from "../../constants";
 
 export default function ForgotPassword() {
   const [loading, setLoading] = useState(false);

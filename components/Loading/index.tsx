@@ -1,8 +1,6 @@
 import React, { memo } from "react";
 import { StyleSheet, View, ActivityIndicator } from "react-native";
-import Colors from "../../constants/Colors";
-
-const { secondary } = Colors.light;
+import { secondary } from "../../constants";
 
 const styles = StyleSheet.create({
   activityIndicator: {

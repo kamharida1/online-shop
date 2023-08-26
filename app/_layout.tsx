@@ -1,17 +1,26 @@
 import "react-native-gesture-handler";
 import "@azure/core-asynciterator-polyfill";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { store } from "../src/app/store";
+import { Provider as ReduxProvider } from "react-redux";
 
 import { useFonts } from "expo-font";
-import { Slot, SplashScreen, Stack } from "expo-router";
+import { Slot, SplashScreen, Stack, Tabs } from "expo-router";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
+import { ExpoSQLiteAdapter } from "@aws-amplify/datastore-storage-adapter/ExpoSQLiteAdapter";
 
-import { AuthProvider } from "../context/auth";
 import { Provider } from "../context/authContext";
-import { Amplify } from "aws-amplify";
-import config from '../src/aws-exports';
-Amplify.configure(config)
+import { Amplify, DataStore } from "aws-amplify";
+
+import config from "../src/aws-exports";
+Amplify.configure(config);
+
+DataStore.configure({
+  storageAdapter: ExpoSQLiteAdapter,
+});
+
+
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -20,7 +29,7 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "index",
+  initialRouteName: "(/)",
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -60,8 +69,15 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <Provider>
-      <Slot />
-    </Provider>
+    <ReduxProvider store={store}>
+      <Provider>
+
+        {/* <Stack screenOptions={{}}>
+          <Stack.Screen name="(app)" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+        </Stack> */}
+        <Slot />
+      </Provider>
+      </ReduxProvider>
   );
 }

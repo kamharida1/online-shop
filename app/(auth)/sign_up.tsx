@@ -7,11 +7,11 @@ import { Auth } from "aws-amplify";
 import { Stack, useNavigation, useRouter } from "expo-router";
 
 import { Input } from "../../components/Input";
-import { goBack, onScreen } from "../../constants/Dimensions";
 import { AppContainer } from "../../components/AppContainer";
 import { Space } from "../../components/Space";
 import { TextError } from "../../components/TextError";
 import { Button } from "../../components/Button";
+import { goBack } from "../../constants";
 
 export default function SignUp() {
   const [loading, setLoading] = useState(false)

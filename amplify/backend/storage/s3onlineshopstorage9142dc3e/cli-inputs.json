@@ -1,0 +1,16 @@
+{
+  "resourceName": "s3onlineshopstorage9142dc3e",
+  "bucketName": "online-shop-storage-9142dc3e",
+  "policyUUID": "73861117",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ",
+    "CREATE_AND_UPDATE",
+    "DELETE"
+  ],
+  "authAccess": [
+    "READ",
+    "CREATE_AND_UPDATE",
+    "DELETE"
+  ]
+}

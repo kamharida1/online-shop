@@ -1,19 +1,18 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React, { ReactElement, useState } from 'react'
-import { Auth } from 'aws-amplify';
+import { StyleSheet, Text, View } from "react-native";
+import React, { ReactElement, useState } from "react";
+import { Auth } from "aws-amplify";
 import * as Yup from "yup";
 
 import * as SecureStore from "expo-secure-store";
-import { router, useLocalSearchParams, useNavigation } from 'expo-router';
-import { goBack } from '../../constants/Dimensions';
-import { AppContainer } from '../../components/AppContainer';
-import { Formik } from 'formik';
-import { Input } from '../../components/Input';
-import { TextError } from '../../components/TextError';
-import { Space } from '../../components/Space';
-import { Button } from '../../components/Button';
-import { useAuth } from '../../context/auth';
-
+import { router, useLocalSearchParams, useNavigation } from "expo-router";
+import { AppContainer } from "../../components/AppContainer";
+import { Formik } from "formik";
+import { Input } from "../../components/Input";
+import { TextError } from "../../components/TextError";
+import { Space } from "../../components/Space";
+import { Button } from "../../components/Button";
+import { useAuth } from "../../context/authContext";
+import { goBack } from "../../constants";
 
 export default function forgot_pass_submit() {
   const [loading, setLoading] = useState(false);
@@ -23,7 +22,7 @@ export default function forgot_pass_submit() {
 
   const { setUser } = useAuth();
 
-  const {email} = useLocalSearchParams()
+  const { email } = useLocalSearchParams();
 
   const _onPress = async (values: {
     email: string;
@@ -35,7 +34,7 @@ export default function forgot_pass_submit() {
       const { email, code, password } = values;
       await Auth.forgotPasswordSubmit(email, code, password);
       const user = await Auth.signIn(email, password);
-      setUser(user)
+      setUser(user);
       setLoading(false);
     } catch (err: any) {
       setLoading(false);

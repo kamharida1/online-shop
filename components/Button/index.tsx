@@ -10,21 +10,21 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
-import Colors from "../../constants/Colors";
 import { Txt } from "../Txt";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { card, primary, secondary, tint } from "../../constants";
 
-const { primary, secondary } = Colors.light;
 
 const styles = StyleSheet.create({
   buttonContainer: {
     width: 320,
-    height: 68,
+    height: 55,
+    alignSelf: 'center',
     marginHorizontal: 20,
     alignItems: "center",
     justifyContent: "center",
     padding: 3,
-    marginVertical: 8,
+    marginVertical: 12,
   },
   button: {
     borderRadius: 10,
@@ -73,7 +73,7 @@ const Button = memo<ButtonT>((
           style={[styles.button, { backgroundColor: "#fff" }]}
           onPress={() => alert("You pressed a button.")}
         >
-          <ActivityIndicator animating color={primary}  style={styles.buttonIcon} />
+          <ActivityIndicator animating={loading} color={tint}  style={styles.buttonIcon} />
           <Txt button title={title} />
         </Pressable>
       </View>
@@ -82,11 +82,14 @@ const Button = memo<ButtonT>((
   if (theme === "primary") {
     return (
       <View
-      style={[styles.buttonContainer, { borderWidth: 4, borderColor: primary, borderRadius: 18 }]}
+        style={[
+          styles.buttonContainer,
+          { borderWidth: 4, borderColor: tint, borderRadius: 10 },
+        ]}
       >
         <Pressable
-          style={[styles.button, { backgroundColor: "#00009977" }]}
-          onPress={() => alert('You pressed a button.')}
+          style={[styles.button, { backgroundColor: '#000' }]}
+          onPress={() => alert("You pressed a button.")}
         >
           <FontAwesome
             name="picture-o"
@@ -94,15 +97,37 @@ const Button = memo<ButtonT>((
             color="#fff"
             style={styles.buttonIcon}
           />
-          <Txt textStyle={{color: "#fff"}} button title={title} />
+          <Txt textStyle={{ color: "#fff" }} button title={title} />
         </Pressable>
-    </View>
-    )
+      </View>
+    );
+  } else if (theme === "secondary") {
+    return (
+      <View
+        style={[
+          styles.buttonContainer,
+          { borderWidth: 4, borderColor: tint, borderRadius: 10 },
+        ]}
+      >
+        <Pressable
+          style={[styles.button, { backgroundColor: '#fff' }]}
+          onPress={() => alert("You pressed a button.")}
+        >
+          <FontAwesome
+            name="picture-o"
+            size={18}
+            color="#000"
+            style={styles.buttonIcon}
+          />
+          <Txt textStyle={{ color: "#000000" }} button title={title} />
+        </Pressable>
+      </View>
+    );
   }
   return (
     <View style={[styles.buttonContainer, viewStyle]}>
       <Pressable onPress={onPress} style={styles.button}>
-        <Txt textStyle={styles.buttonLabel} button title={title} />
+        <Txt body textStyle={styles.buttonLabel} button title={title} />
       </Pressable>
     </View>
   )

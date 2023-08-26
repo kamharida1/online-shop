@@ -25,6 +25,8 @@ type EagerProduct = {
   readonly oldPrice?: number | null;
   readonly CartProduct?: CartProduct | null;
   readonly OrderProduct?: OrderProduct | null;
+  readonly productDetails?: string | null;
+  readonly subtype?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   readonly productCartProductId?: string | null;
@@ -50,6 +52,8 @@ type LazyProduct = {
   readonly oldPrice?: number | null;
   readonly CartProduct: AsyncItem<CartProduct | undefined>;
   readonly OrderProduct: AsyncItem<OrderProduct | undefined>;
+  readonly productDetails?: string | null;
+  readonly subtype?: string | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
   readonly productCartProductId?: string | null;
@@ -149,6 +153,7 @@ type EagerOrder = {
   readonly OrderProduct?: OrderProduct | null;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
+  readonly orderAddressId?: string | null;
   readonly orderOrderProductId?: string | null;
 }
 
@@ -165,6 +170,7 @@ type LazyOrder = {
   readonly OrderProduct: AsyncItem<OrderProduct | undefined>;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
+  readonly orderAddressId?: string | null;
   readonly orderOrderProductId?: string | null;
 }
 

@@ -1,9 +1,23 @@
-import { useNavigation } from "expo-router";
 import { Dimensions } from "react-native"
 
 export const win = Dimensions.get('window')
 export const W = win.width
 export const H = win.height
+
+export const primary = '#b8147e'
+export const secondary = 'rgba(0,0,0,0.8)'
+export const background = '#fff6fe'
+export const card = '#fff'
+export const tint = '#cd149c'
+export const surface = '#ffcffb'
+export const neutral = '#ffe2fc'
+export const tabIconDefault = '#ccc'
+export const tabIconSelected = '#cd149c'
+export const dimGray = '#00000080'
+export const lightGray = '#444'
+export const danger = '#DC143C'
+export const success = '#03AC13'
+
 
 export const Device = {
   // eslint-disable-next-line

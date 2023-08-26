@@ -1,9 +1,9 @@
 import { Text, Platform, StyleSheet, View, GestureResponderEvent } from "react-native";
-import { W } from "../../constants/Dimensions";
 import { ifIphoneX } from "react-native-iphone-x-helper";
 import { memo } from "react";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { Fontisto } from '@expo/vector-icons'
+import { W } from "../../constants";
 
 const styles = StyleSheet.create({
   container: {
