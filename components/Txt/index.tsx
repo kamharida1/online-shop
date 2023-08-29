@@ -13,7 +13,7 @@ const styles = ScaledSheet.create({
   h1Style: {
     fontSize: Platform.OS === "ios" ? "24@s" : "24@s",
     color: "rgba(0,0,0,0.8)",
-    fontFamily: "AirExtraBold",
+    fontFamily: "AirBold",
   },
   h2Style: {
     fontSize: Platform.OS === "ios" ? "17@s" : "17@s",

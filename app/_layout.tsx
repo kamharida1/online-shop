@@ -1,7 +1,6 @@
 import "react-native-gesture-handler";
 import "@azure/core-asynciterator-polyfill";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { store } from "../src/app/store";
 import { Provider as ReduxProvider } from "react-redux";
 
 import { useFonts } from "expo-font";
@@ -69,7 +68,7 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <ReduxProvider store={store}>
+    
       <Provider>
 
         {/* <Stack screenOptions={{}}>
@@ -78,6 +77,5 @@ function RootLayoutNav() {
         </Stack> */}
         <Slot />
       </Provider>
-      </ReduxProvider>
   );
 }

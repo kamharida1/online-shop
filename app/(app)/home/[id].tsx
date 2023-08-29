@@ -9,6 +9,7 @@ import QuantitySelector from "../../../components/QuantitySelector";
 import ImageModal from "../../../components/ImageModal";
 import formatPrice from "../../../utils/naira_price";
 import ImageCarousel from "../../../components/Carousel";
+import { Txt } from "../../../components/Txt";
 
 export default function ProductDetail() {
   const [cartProducts, setCartProducts] = useState<CartProduct[]>([]);
@@ -109,13 +110,13 @@ export default function ProductDetail() {
               padding: 1,
             }}
           >
-            <Text
+            <Txt
+              h1
+              title={product?.title as string}
               numberOfLines={1}
               ellipsizeMode="tail"
-              style={tw`text-2xl font-semibold text-black`}
-            >
-              {product?.title}
-            </Text>
+              textStyle={tw`text-2xl font-semibold text-black`}
+            />
             <Text style={tw`font-medium text-3xl mt-2 text-slate-700`}>
               {formatPrice(product?.price as number)}
             </Text>
