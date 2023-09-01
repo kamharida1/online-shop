@@ -1,4 +1,4 @@
-type Product @model @auth(rules: [{ allow: public }, { allow: owner }]) {
+type Product @model @auth(rules: [{allow: public}, {allow: owner}]) {
   id: ID!
   title: String!
   description: String
@@ -7,6 +7,7 @@ type Product @model @auth(rules: [{ allow: public }, { allow: owner }]) {
   options: [String!]
   category: String
   avgRating: Float
+  count: Int
   ratings: Int
   brand: String
   price: Float!
@@ -17,7 +18,7 @@ type Product @model @auth(rules: [{ allow: public }, { allow: owner }]) {
   subtype: String
 }
 
-type CartProduct @model @auth(rules: [{ allow: public }, { allow: owner }]) {
+type CartProduct @model @auth(rules: [{allow: public}, {allow: owner}]) {
   id: ID!
   userSub: String!
   quantity: Int!
@@ -26,7 +27,7 @@ type CartProduct @model @auth(rules: [{ allow: public }, { allow: owner }]) {
   product: Product @belongsTo(fields: ["productID"])
 }
 
-type OrderProduct @model @auth(rules: [{ allow: public }, { allow: owner }]) {
+type OrderProduct @model @auth(rules: [{allow: public}, {allow: owner}]) {
   id: ID!
   quantity: Int!
   option: String
@@ -36,7 +37,7 @@ type OrderProduct @model @auth(rules: [{ allow: public }, { allow: owner }]) {
   order: Order @belongsTo(fields: ["orderID"])
 }
 
-type Order @model @auth(rules: [{ allow: public }, { allow: owner }]) {
+type Order @model @auth(rules: [{allow: public}, {allow: owner}]) {
   id: ID!
   userSub: String!
   amount: Float
@@ -45,14 +46,19 @@ type Order @model @auth(rules: [{ allow: public }, { allow: owner }]) {
   OrderProduct: OrderProduct @hasOne
 }
 
-type Address @model @auth(rules: [{ allow: public }, { allow: owner }]) {
+type Address @model @auth(rules: [{allow: public}, {allow: owner}]) {
   id: ID!
-  fullName: String!
+  userSub: String!
+  firstName: String!
+  lastName: String!
+  email: String!
+  phone: String!
   street: String!
+  street2: String
   city: String!
   state: String!
   postalCode: String
-  country: String!
+  country: String
   isSelected: Boolean
-  userSub: String!
 }
+ 

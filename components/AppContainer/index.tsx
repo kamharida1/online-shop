@@ -1,6 +1,6 @@
 import { memo } from "react";
 import KeyboardShift from "@fullstackcraft/react-native-keyboard-shift/lib/components/KeyboardShift";
-import { GestureResponderEvent, StyleSheet, View } from "react-native";
+import { GestureResponderEvent, StyleSheet, View, ViewStyle } from "react-native";
 import { Header } from "../Header";
 import { Loading } from "../Loading";
 import { ScrollView } from "react-native-gesture-handler";
@@ -32,6 +32,7 @@ interface AppContainerT {
   children?: React.ReactNode;
   title?: string;
   loading?: boolean;
+  style?: ViewStyle;
 }
 
 const AppContainer = memo<AppContainerT>(
@@ -43,13 +44,14 @@ const AppContainer = memo<AppContainerT>(
     iconRight,
     children,
     title,
+    style,
     loading = false
   }) => {
     const MyView = !title ? View : SafeAreaView
     const { container, sub } = styles
   return (
     <KeyboardShift>
-      <MyView style={[container, { backgroundColor: "white" }]}>
+      <MyView style={[container, { backgroundColor: "white" }, style]}>
         {/* <StatusBarAlert
           visible={message !== ""}
           message={message}

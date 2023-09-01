@@ -32,6 +32,7 @@ export default function Compose() {
   const [avgRating, setAvgRating] = useState('0');
   const [ratings, setRatings] = useState('0');
   const [brand, setBrand] = useState("");
+  const [count, setCount] = useState("0");
   const [price, setPrice] = useState('0');
   const [subtype, setSubtype] = useState<string | null>(null);
   const [oldPrice, setOldPrice] = useState('0');
@@ -56,6 +57,7 @@ export default function Compose() {
       category,
       avgRating: parseFloat(avgRating),
       brand,
+      count: parseInt(count),
       price: parseFloat(price),
       oldPrice: parseFloat(oldPrice),
       productDetails,
@@ -72,6 +74,7 @@ export default function Compose() {
     setAvgRating("0");
     setRatings("0");
     setBrand("");
+    setCount("0");
     setPrice("0");
     setSubtype(null);
     setOldPrice("0");
@@ -187,6 +190,12 @@ export default function Compose() {
           value={price}
           placeholder="Price"
           onChangeText={(value) => setPrice(value)}
+          keyboardType="numeric"
+        />
+        <Input
+          value={count}
+          placeholder="Product Count"
+          onChangeText={(value) => setCount(value)}
           keyboardType="numeric"
         />
         <Input

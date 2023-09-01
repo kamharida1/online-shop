@@ -61,6 +61,13 @@ export const schema = {
                     "isRequired": false,
                     "attributes": []
                 },
+                "count": {
+                    "name": "count",
+                    "isArray": false,
+                    "type": "Int",
+                    "isRequired": false,
+                    "attributes": []
+                },
                 "ratings": {
                     "name": "ratings",
                     "isArray": false,
@@ -581,8 +588,36 @@ export const schema = {
                     "isRequired": true,
                     "attributes": []
                 },
-                "fullName": {
-                    "name": "fullName",
+                "userSub": {
+                    "name": "userSub",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "firstName": {
+                    "name": "firstName",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "lastName": {
+                    "name": "lastName",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "email": {
+                    "name": "email",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": true,
+                    "attributes": []
+                },
+                "phone": {
+                    "name": "phone",
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
@@ -593,6 +628,13 @@ export const schema = {
                     "isArray": false,
                     "type": "String",
                     "isRequired": true,
+                    "attributes": []
+                },
+                "street2": {
+                    "name": "street2",
+                    "isArray": false,
+                    "type": "String",
+                    "isRequired": false,
                     "attributes": []
                 },
                 "city": {
@@ -620,7 +662,7 @@ export const schema = {
                     "name": "country",
                     "isArray": false,
                     "type": "String",
-                    "isRequired": true,
+                    "isRequired": false,
                     "attributes": []
                 },
                 "isSelected": {
@@ -628,13 +670,6 @@ export const schema = {
                     "isArray": false,
                     "type": "Boolean",
                     "isRequired": false,
-                    "attributes": []
-                },
-                "userSub": {
-                    "name": "userSub",
-                    "isArray": false,
-                    "type": "String",
-                    "isRequired": true,
                     "attributes": []
                 },
                 "createdAt": {
@@ -695,5 +730,5 @@ export const schema = {
     "enums": {},
     "nonModels": {},
     "codegenVersion": "3.4.4",
-    "version": "f3a0bf685dd98464280134e09afd5d09"
+    "version": "8387d41c9878b8d0a22cebc324fb60e2"
 };

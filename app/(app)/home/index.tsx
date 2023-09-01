@@ -71,7 +71,7 @@ function ProductsList() {
       contentContainerStyle={{backgroundColor: 'white', paddingBottom: 20}}
       data={products}
       renderItem={({ item }) => <CardProduct obj={item} />}
-      keyExtractor={(item) => item.title}
+      keyExtractor={(item) => item.id}
       numColumns={2}
       ListEmptyComponent={ListEmptyComponent}
       // ListHeaderComponent={() => (<Button title="Sync" onPress={handleSyncClick} />)}

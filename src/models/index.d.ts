@@ -19,6 +19,7 @@ type EagerProduct = {
   readonly options?: string[] | null;
   readonly category?: string | null;
   readonly avgRating?: number | null;
+  readonly count?: number | null;
   readonly ratings?: number | null;
   readonly brand?: string | null;
   readonly price: number;
@@ -46,6 +47,7 @@ type LazyProduct = {
   readonly options?: string[] | null;
   readonly category?: string | null;
   readonly avgRating?: number | null;
+  readonly count?: number | null;
   readonly ratings?: number | null;
   readonly brand?: string | null;
   readonly price: number;
@@ -186,14 +188,18 @@ type EagerAddress = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly fullName: string;
+  readonly userSub: string;
+  readonly firstName: string;
+  readonly lastName: string;
+  readonly email: string;
+  readonly phone: string;
   readonly street: string;
+  readonly street2?: string | null;
   readonly city: string;
   readonly state: string;
   readonly postalCode?: string | null;
-  readonly country: string;
+  readonly country?: string | null;
   readonly isSelected?: boolean | null;
-  readonly userSub: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
@@ -204,14 +210,18 @@ type LazyAddress = {
     readOnlyFields: 'createdAt' | 'updatedAt';
   };
   readonly id: string;
-  readonly fullName: string;
+  readonly userSub: string;
+  readonly firstName: string;
+  readonly lastName: string;
+  readonly email: string;
+  readonly phone: string;
   readonly street: string;
+  readonly street2?: string | null;
   readonly city: string;
   readonly state: string;
   readonly postalCode?: string | null;
-  readonly country: string;
+  readonly country?: string | null;
   readonly isSelected?: boolean | null;
-  readonly userSub: string;
   readonly createdAt?: string | null;
   readonly updatedAt?: string | null;
 }
