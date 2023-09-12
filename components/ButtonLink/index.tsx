@@ -7,15 +7,18 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Txt } from "../Txt";
+import { danger, text, tint } from "../../constants";
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    //flex: 1,
+    marginVertical: 30,
     justifyContent: "center",
     alignItems: "flex-start",
   },
   h: {
     textDecorationLine: "underline",
+    color: danger,
   },
 });
 
@@ -31,7 +34,7 @@ const ButtonLink = memo<ButtonLinkT>(
     const { container, h } = styles;
     return (
       <TouchableOpacity onPress={onPress} style={[container, viewStyle]}>
-        <Txt h3 title={title} textStyle={[h, textStyle]} />
+        <Txt body title={title} textStyle={[h, textStyle]} />
       </TouchableOpacity>
     );
   }

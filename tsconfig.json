@@ -9,5 +9,5 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "components/Screen"
-  ]
+, "components/CardAnimated"  ]
 }

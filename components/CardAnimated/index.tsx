@@ -40,17 +40,19 @@ class CardAnimated extends Component<CardProps> {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
-    borderRadius: 10,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 4,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    padding: 12,
-    marginVertical: 4,
-    marginHorizontal: 1,
+    //borderRadius: 10,
+    // shadowColor: "#000",
+    // shadowOffset: { width: 0, height: 2 },
+    // shadowOpacity: 0.2,
+    // shadowRadius: 4,
+    // elevation: 4,
+    borderWidth: 2,
+    borderLeftWidth: 0,
+    borderTopWidth: 0,
+    borderRightWidth: 0,
+    borderBottomColor: "#F0F0F0",
+    marginVertical: 10,
+    
   },
 });
 

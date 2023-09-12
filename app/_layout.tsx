@@ -68,14 +68,9 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    
-      <Provider>
-
-        {/* <Stack screenOptions={{}}>
-          <Stack.Screen name="(app)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: "modal" }} />
-        </Stack> */}
-        <Slot />
-      </Provider>
+    <Stack>
+      <Stack.Screen name="(app)" options={{ headerShown: false}} />
+      <Stack.Screen name="(auth)" options={{ headerShown: false}}/>
+  </Stack>
   );
 }

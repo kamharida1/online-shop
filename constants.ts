@@ -4,11 +4,12 @@ export const win = Dimensions.get('window')
 export const W = win.width
 export const H = win.height
 
-export const primary = '#b8147e'
+export const primary = '#b81'
 export const secondary = 'rgba(0,0,0,0.8)'
 export const background = '#fff6fe'
 export const card = '#fff'
-export const tint = '#cd149c'
+export const text = "#007BFF"
+export const tint = '#988'
 export const surface = '#ffcffb'
 export const neutral = '#ffe2fc'
 export const tabIconDefault = '#ccc'

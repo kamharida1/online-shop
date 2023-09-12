@@ -7,7 +7,6 @@ import { useRouter } from "expo-router";
 import * as ImagePicker from "expo-image-picker";
 import RNPickerSelect from "react-native-picker-select";
 
-
 import { options, categories, brands } from "../../../utils/data";
 import { Product } from "../../../src/models";
 import { AppContainer } from "../../../components/AppContainer";
@@ -23,25 +22,27 @@ import { Txt } from "../../../components/Txt";
 import { s } from "react-native-size-matters";
 const { width } = Dimensions.get("window");
 
-export default function Compose() { 
+export default function Compose() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [image, setImage] = useState("");
   const [category, setCategory] = useState("");
-  const [avgRating, setAvgRating] = useState('0');
-  const [ratings, setRatings] = useState('0');
+  const [avgRating, setAvgRating] = useState("0");
+  const [ratings, setRatings] = useState("0");
   const [brand, setBrand] = useState("");
   const [count, setCount] = useState("0");
-  const [price, setPrice] = useState('0');
+  const [price, setPrice] = useState("0");
   const [subtype, setSubtype] = useState<string | null>(null);
-  const [oldPrice, setOldPrice] = useState('0');
-  const [productDetails, setProductDetails] = useState<Record<string, string>>({});
+  const [oldPrice, setOldPrice] = useState("0");
+  const [productDetails, setProductDetails] = useState<Record<string, string>>(
+    {}
+  );
   const [progressText, setProgressText] = useState("");
   const [isLoading, setisLoading] = useState(false);
 
-  const { loading, create, error } = useDataStore(Product)
-  
+  const { loading, create, error } = useDataStore(Product);
+
   const s3BucketUrl = `https://online-shop-storage-9142dc3edev-dev.s3.us-east-2.amazonaws.com/public/`;
 
   const router = useRouter();
@@ -90,14 +91,14 @@ export default function Compose() {
     setBrand(value);
   };
 
-  const hadleSubtypeChange = (value: string) => { 
+  const hadleSubtypeChange = (value: string) => {
     setSubtype(value);
     setProductDetails({});
-  }
+  };
 
   const handleProductDetailsChange = (label: string, value: string) => {
     setProductDetails({ ...productDetails, [label]: value });
-   }
+  };
 
   const pickImages = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -121,43 +122,42 @@ export default function Compose() {
 
   const uploadResource = async (uri: any) => {
     const img = await fetchResourceFromURI(uri);
-    setisLoading(true)
+    setisLoading(true);
     return Storage.put(uri, img, {
       progressCallback(progress) {
-        setProgressText(`Uploading:  ${Math.round((progress.loaded / progress.total) * 100)}%`);  
-        console.log(
-          `Progress: ${progress.loaded}/${progress.total}`
+        setProgressText(
+          `Uploading:  ${Math.round((progress.loaded / progress.total) * 100)}%`
         );
-      }
+        console.log(`Progress: ${progress.loaded}/${progress.total}`);
+      },
     })
       .then((res) => {
         setProgressText("Upload Successful");
         // setSelectedImages([]);
-        Storage.get(res.key)
-          .then((result) => {
-            result
-            //console.log(result);
-            setisLoading(false);
-            // setSelectedImages((selectedImages) => [...selectedImages, result as string]);
-        })
+        Storage.get(res.key).then((result) => {
+          result;
+          //console.log(result);
+          setisLoading(false);
+          // setSelectedImages((selectedImages) => [...selectedImages, result as string]);
+        });
       })
       .catch((err) => {
         setProgressText("Upload Error");
         console.log(err);
-    })
-  }
+      });
+  };
 
   const uploadImages = async () => {
     setisLoading(true);
-    try { 
+    try {
       selectedImages.map(async (uri) => await uploadResource(uri));
       setSelectedImages([...selectedImages]);
       setisLoading(false);
     } catch (err) {
-      console.error('Upload Error:', err);
+      console.error("Upload Error:", err);
       setisLoading(false);
-   }
-  }
+    }
+  };
 
   const showIconPlatform =
     Platform.OS === "android" ? (
@@ -170,7 +170,7 @@ export default function Compose() {
         color="black"
       />
     );
-  
+
   return (
     <AppContainer loading={loading}>
       <View style={tw`flex-1 mt-10 mb-40`}>

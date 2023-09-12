@@ -1,38 +1,47 @@
-import { Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import tw from "../lib/tailwind";
 import { useEffect, useState } from "react";
-import { useAuth } from "../context/authContext";
+import * as SecureStore from 'expo-secure-store';
 import { Auth } from "aws-amplify";
-import { useFocusEffect, useRouter } from "expo-router";
+import { router } from "expo-router";
+import { AppContainer } from "../components/AppContainer";
+import { Space } from "../components/Space";
+import { Button } from "react-native";
 
-export default function App() {
+const Index = () => {
   const [loading, setLoading] = useState(false);
-  const { user, setUser } = useAuth();
-
-  const router = useRouter();
   useEffect(() => {
     setLoading(true);
-    // setTimeout(() => {
-    //   setLoading(false);
-    // }, 2000);
-    const userOk = async (): Promise<void> => {
+    const key = async (): Promise<void> => {
       try {
-        const user = await Auth.currentAuthenticatedUser();
-        if (user) {
-          router.replace('/(app)/home/')
+        const email = await SecureStore.getItemAsync('authKeyEmail')
+        const password = await SecureStore.getItemAsync('authKeyPassword')
+        const credentials = { email, password }
+        
+        if (credentials) {
+          // const { email, password } = credentials;
+          // const user = await Auth.signIn(email as string, password as string);
+          router.replace('/(app)/home')
+          setLoading(false);
+        } else {
+          setLoading(false);
         }
-      } catch (error) {
-        setUser(null);
-      } finally {
+        // const user = await Auth.currentAuthenticatedUser();
+        // setLoading(false);
+        // user && router.push('/(app)/home')
+      } catch (err) {
+        console.log('error', err);
         setLoading(false);
       }
-     };
-    userOk();
-  },[])
+    };
+    key();
+  }, []);
   return (
-    <SafeAreaView style={tw`flex-1 items-center justify-center`}>
-      <Text>App</Text>
-    </SafeAreaView>
-  );
-}
+    <AppContainer loading={loading}>
+      <Space height={80} />
+      <Button title="Sign In" onPress={() => router.push('/(auth)/sign_in')} />
+      <Space height={20} />
+      <Button title="Sign Up" onPress={() => router.push('/(auth)/sign_up')} />
+    </AppContainer>
+  )
+ };
+
+export default Index;

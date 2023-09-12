@@ -13,6 +13,7 @@ import {
 import { Txt } from "../Txt";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { card, primary, secondary, tint } from "../../constants";
+import { useFormikContext } from "formik";
 
 
 const styles = StyleSheet.create({
@@ -51,6 +52,7 @@ interface ButtonT {
   viewStyle?: StyleProp<ViewStyle>;
   theme?: string;
   loading?: boolean;
+  disabled?: boolean;
 }
 
 const Button = memo<ButtonT>((
@@ -59,8 +61,31 @@ const Button = memo<ButtonT>((
     onPress,
     theme,
     loading = false,
-    viewStyle
+    viewStyle,
   }) => {
+  const { handleSubmit, isValid } = useFormikContext();
+  { 
+    !isValid && (
+      <View
+        style={[
+          styles.buttonContainer,
+          {
+            borderWidth: 4,
+            borderColor: primary,
+            borderRadius: 18,
+            opacity: 0.5,
+          },
+        ]}
+      >
+        <Pressable
+          style={[styles.button, { backgroundColor: "#666" }]}
+          onPress={() => handleSubmit()}
+        >
+          <Txt textStyle={{ color: "#666"}} button title={title} />
+        </Pressable>
+      </View>
+    );
+  }
   {
     loading && (
       <View
@@ -71,7 +96,7 @@ const Button = memo<ButtonT>((
       >
         <Pressable
           style={[styles.button, { backgroundColor: "#fff" }]}
-          onPress={() => alert("You pressed a button.")}
+          onPress={() => handleSubmit()}
         >
           <ActivityIndicator animating={loading} color={tint}  style={styles.buttonIcon} />
           <Txt button title={title} />
@@ -89,7 +114,7 @@ const Button = memo<ButtonT>((
       >
         <Pressable
           style={[styles.button, { backgroundColor: '#000' }]}
-          onPress={() => alert("You pressed a button.")}
+          onPress={() => handleSubmit()} 
         >
           <FontAwesome
             name="picture-o"
@@ -111,7 +136,7 @@ const Button = memo<ButtonT>((
       >
         <Pressable
           style={[styles.button, { backgroundColor: '#fff' }]}
-          onPress={() => alert("You pressed a button.")}
+          onPress={() => handleSubmit()}
         >
           <FontAwesome
             name="picture-o"

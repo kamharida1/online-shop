@@ -7,12 +7,12 @@ import { dimGray } from "../../constants";
 const styles = ScaledSheet.create({
   h0Style: {
     fontSize: Platform.OS === "ios" ? "36@s" : "35@s",
-    color: "rgba(0,0,0,0.8)",
+    //color: "rgba(0,0,0,0.8)",
     fontFamily: "AirBoldBlack",
   },
   h1Style: {
     fontSize: Platform.OS === "ios" ? "24@s" : "24@s",
-    color: "rgba(0,0,0,0.8)",
+    //color: "rgba(0,0,0,0.8)",
     fontFamily: "AirBold",
   },
   h2Style: {
@@ -46,7 +46,7 @@ const styles = ScaledSheet.create({
         fontSize: Platform.OS === "ios" ? "13@s" : "13@s",
       },
     ),
-    color: dimGray,
+    //color: dimGray,
     fontFamily: "AirMedium",
   },
   bodyStyle2: {
@@ -66,7 +66,7 @@ const styles = ScaledSheet.create({
         fontSize: Platform.OS === "ios" ? "13@s" : "13@s",
       },
     ),
-    color: "black",
+    color: "#333",
     fontFamily: "AirMedium",
   },
 });

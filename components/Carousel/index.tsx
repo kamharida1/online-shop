@@ -63,7 +63,7 @@ const ImageCarousel = ({
             style={[
               styles.dot,
               {
-                backgroundColor: index === activeIndex ? "#2f95dc" : "#ededed",
+                backgroundColor: index === activeIndex ? "#988" : "#ededed",
               },
             ]}
           />
@@ -79,10 +79,10 @@ const styles = StyleSheet.create({
     margin: 10,
     height: 350,
     resizeMode: "contain",
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 3,
+    // shadowColor: "#000",
+    // shadowOffset: { width: 0, height: 0 },
+    // shadowOpacity: 0.5,
+    // shadowRadius: 3,
     borderRadius: 10,
     backgroundColor: 'transparent',
     // overflow: "hidden",

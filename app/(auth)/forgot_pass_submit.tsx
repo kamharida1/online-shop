@@ -6,131 +6,120 @@ import * as Yup from "yup";
 import * as SecureStore from "expo-secure-store";
 import { router, useLocalSearchParams, useNavigation } from "expo-router";
 import { AppContainer } from "../../components/AppContainer";
-import { Formik } from "formik";
-import { Input } from "../../components/Input";
-import { TextError } from "../../components/TextError";
+import { Field, Formik } from "formik";
+import Cart from "../../assets/svgs/cart.svg";
+
 import { Space } from "../../components/Space";
-import { Button } from "../../components/Button";
-import { useAuth } from "../../context/authContext";
-import { goBack } from "../../constants";
+import { InputField } from "../../components/InputField";
+import { Txt } from "../../components/Txt";
+import AppForm from "../../components/AppForm";
+import { ButtonSubmit } from "../../components/ButtonSubmit";
+import tw from "../../lib/tailwind";
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().email().required(),
+  code: Yup.string().min(6).required(),
+  password: Yup.string()
+    .matches(/\w*[a-z]\w*/, "Password must have a small letter")
+    .matches(/\w*[A-Z]\w*/, "Password must have a capital letter")
+    .matches(/\d/, "Password must have a number")
+    .min(8, ({ min }) => `Password must be at least ${min} characters`)
+    .required("Password is required")
+    .label("Password"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password")], "Passwords do not match")
+    .required("Confirm password is required")
+    .label("Confirm Password"),
+}); 
 
 export default function forgot_pass_submit() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const navigation = useNavigation();
-
-  const { setUser } = useAuth();
-
   const { email } = useLocalSearchParams();
 
-  const _onPress = async (values: {
-    email: string;
-    password: string;
-    code: string;
-  }): Promise<void> => {
-    setLoading(true);
-    try {
-      const { email, code, password } = values;
-      await Auth.forgotPasswordSubmit(email, code, password);
-      const user = await Auth.signIn(email, password);
-      setUser(user);
-      setLoading(false);
-    } catch (err: any) {
-      setLoading(false);
-      setError(err.message);
-    }
-  };
   return (
     <>
-      <AppContainer
-        title="Confirmation"
-        onPress={goBack(navigation)}
-        loading={loading}
-        //message={error}
-      >
-        <Formik
-          initialValues={{
-            email: (email as string) || "",
-            code: "",
-            password: "",
-            passwordConfirmation: "",
-          }}
-          onSubmit={(values): Promise<void> => _onPress(values)}
-          validationSchema={Yup.object().shape({
-            email: Yup.string().email().required(),
-            code: Yup.string().min(6).required(),
-            password: Yup.string().min(6).required(),
-            passwordConfirmation: Yup.string().min(6).required(),
-          })}
-        >
-          {({
-            values,
-            handleChange,
-            errors,
-            setFieldTouched,
-            touched,
-            handleSubmit,
-          }): ReactElement => (
-            <>
-              <Input
-                name="email"
-                value={values.email}
-                onChangeText={handleChange("email")}
-                onBlur={async () => {
-                  await setFieldTouched("email");
-                }}
-                placeholder="E-mail"
-                touched={touched}
-                errors={errors}
-                autoCapitalize="none"
-              />
-              <Input
-                name="code"
-                value={values.code}
-                onChangeText={handleChange("code")}
-                onBlur={async () => {
-                  await setFieldTouched("code");
-                }}
-                placeholder="Code"
-                touched={touched}
-                errors={errors}
-              />
-              <Input
-                name="password"
-                value={values.password}
-                onChangeText={handleChange("password")}
-                onBlur={async () => {
-                  await setFieldTouched("password");
-                }}
-                placeholder="Password"
-                touched={touched}
-                errors={errors}
-                autoCapitalize="none"
-                secureTextEntry
-              />
-              <Input
-                name="passwordConfirmation"
-                value={values.passwordConfirmation}
-                onChangeText={handleChange("passwordConfirmation")}
-                onBlur={async () => {
-                  await setFieldTouched("passwordConfirmation");
-                }}
-                placeholder="Password confirm"
-                touched={touched}
-                errors={errors}
-                autoCapitalize="none"
-                secureTextEntry
-              />
-              {error !== "" && (
-                <TextError title={error} textStyle={{ alignSelf: "center" }} />
-              )}
-              <Space height={30} />
-              <Button title="Confirm" onPress={handleSubmit} />
-              <Space height={80} />
-            </>
-          )}
-        </Formik>
+      <AppContainer style={tw`mt-12`}>
+        <View style={tw`mx-3`}>
+          <Cart width={100} height={100} style={{ alignSelf: "center" }} />
+
+          <Txt textStyle={{ alignSelf: "center" }} title="Forgot Password" h1 />
+          <Space />
+          <AppForm
+            initialValues={{
+              email: email || "",
+              code: "",
+              password: "",
+              confirmPassword: "",
+            }}
+            validationSchema={validationSchema}
+            onSubmit={async (values: {
+              email: string;
+              password: string;
+              code: string;
+            }): Promise<void> => {
+              setLoading(true);
+              try {
+                const { email, code, password } = values;
+                await Auth.forgotPasswordSubmit(email, code, password);
+                await SecureStore.setItemAsync("authKeyEmail", email);
+                await SecureStore.setItemAsync("authKeyPassword", password);
+                await Auth.signIn(email, password);
+                router.push("/(app)/home");
+                setLoading(false);
+              } catch (err: any) {
+                setLoading(false);
+                setError(err.message);
+              }
+            }}
+          >
+            <Field
+              component={InputField}
+              name="email"
+              placeholder="Email "
+              autoCapitalize="none"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+            />
+            <Field
+              component={InputField}
+              name="code"
+              placeholder="Insert code "
+              autoCapitalize="none"
+              keyboardType="numeric"
+              textContentType="oneTimeCode"
+            />
+            <Field
+              name="password"
+              component={InputField}
+              placeholder="Password"
+              autoCapitalize="none"
+              isPassword
+              autoCorrect={false}
+    
+              textContentType="password"
+            />
+            <Field
+              name="confirmPassword"
+              component={InputField}
+              placeholder="Confirm Password"
+              autoCapitalize="none"
+              isPassword
+              autoCorrect={false}
+              textContentType="password"
+            />
+            <Space />
+            {error !== "" && (
+              <Txt h3 title={error as string} textStyle={{ color: "red" }} />
+            )}
+            <ButtonSubmit
+              title="Confirm"
+              disabled={loading}
+              loading={loading}
+            />
+          </AppForm>
+        </View>
       </AppContainer>
     </>
   );

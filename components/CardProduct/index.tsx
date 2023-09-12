@@ -1,4 +1,4 @@
-import { Href, Link } from "expo-router"
+import { Href, Link, router } from "expo-router"
 import { memo } from "react"
 import { BlurView } from 'expo-blur';
 
@@ -6,6 +6,7 @@ import { Image, ImageBackground, Pressable, StyleSheet, Text, View } from "react
 import formatPrice from "../../utils/naira_price";
 import { Txt } from "../Txt";
 import tw from "../../lib/tailwind";
+import { LazyProduct } from "../../src/models";
 
 const styles = StyleSheet.create({
   container: {
@@ -28,42 +29,26 @@ const styles = StyleSheet.create({
 });
 
 interface CardProductT {
-  obj?: {
-    id: string
-    title: string
-    images: string
-    price: number
-    oldPrice: number
-  }
+  item: LazyProduct
 }
 
-const CardProduct = memo<CardProductT>(({ obj }) => {
-  if (!obj) {
+const CardProduct = memo<CardProductT>(({ item }) => {
+  if (!item) {
     return null; // or some fallback JSX if needed
   }
-  const { id, images, title, price, oldPrice } = obj
+  const { id, images, title, price, oldPrice } = item
   const { container, imageStyle, textStyle } = styles;
+
+  const onPress = () => {
+    router.push({ pathname: "/(app)/home/detail", params: { id } });
+  }
   
   return (
-    <Link
-      key={id}
-      href={{
-        pathname: "/(app)/home/[id]",
-        params: {
-          id,
-        },
-      }}
-      asChild
-    >
-      <Pressable style={container}>
-        {({ hovered, pressed }) => (
+    
+      <Pressable onPress={onPress}  style={container}>
           <ImageBackground source={{ uri: images[0] }} style={imageStyle}>
             <BlurView style={{ padding: 8 }} intensity={50} tint="dark">
-              {/* <Text style={textStyle}>{title}</Text> */}
               <Txt textStyle={{ color: "#fff", fontWeight:"800" }} h5 title={title} />
-              {/* <Text style={[textStyle, { fontSize: 17 }]}>
-                {formatPrice(price)}
-              </Text> */}
               <Txt
                 textStyle={{ color: "#fff" }}
                 h5
@@ -71,14 +56,7 @@ const CardProduct = memo<CardProductT>(({ obj }) => {
               />
             </BlurView>
           </ImageBackground>
-        )}
       </Pressable>
-    </Link>
-    // <View style={tw`p-3 flex-col`}>
-    //   <Text>{title}</Text>
-    //   <Text >{price}</Text>
-    //   <Image style={{width: 70, height: 70, backgroundColor: '#111'}} source={{uri: images[0]}} />
-    // </View>
   );
 })
 

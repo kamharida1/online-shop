@@ -1,14 +1,24 @@
 import { Auth } from "aws-amplify";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
-import { ReactElement, useState } from "react";
+import {  useState } from "react";
 import * as Yup from "yup";
-import { Formik } from "formik";
+import { Field } from "formik";
+import Cart from "../../assets/svgs/cart.svg";
+
 
 import { AppContainer } from "../../components/AppContainer";
-import { Input } from "../../components/Input";
 import { Space } from "../../components/Space";
 import { Button } from "../../components/Button";
-import { goBack } from "../../constants";
+import { Txt } from "../../components/Txt";
+import AppForm from "../../components/AppForm";
+import { InputField } from "../../components/InputField";
+import { ButtonSubmit } from "../../components/ButtonSubmit";
+import tw from "../../lib/tailwind";
+import { View } from "moti";
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string().email().required(),
+});
 
 export default function ForgotPassword() {
   const [loading, setLoading] = useState(false);
@@ -19,64 +29,52 @@ export default function ForgotPassword() {
 
   const { email } = useLocalSearchParams();
 
-  const _onPress = async (values: { email: string }): Promise<void> => {
-    setLoading(true);
-    try {
-      const { email } = values;
-      const user = await Auth.forgotPassword(email);
-      user &&
-        router.push({
-          pathname: "/(auth)/forgot_pass_submit",
-          params: { email },
-        });
-      setLoading(false);
-    } catch (err) {
-      setError(error);
-    }
-  };
-
   return (
     <>
-      <AppContainer
-        title="Forgot"
-        onPress={goBack(navigation)}
-        loading={loading}
-        //message={error}
-      >
-        <Formik
-          initialValues={{ email: email as string || "" }}
-          onSubmit={(values): Promise<void> => _onPress(values)}
-          validationSchema={Yup.object().shape({
-            email: Yup.string().email().required(),
-          })}
-        >
-          {({
-            values,
-            handleChange,
-            errors,
-            setFieldTouched,
-            touched,
-            handleSubmit,
-          }): ReactElement => (
-            <>
-              <Input
-                name="email"
-                value={values.email}
-                onChangeText={handleChange("email")}
-                onBlur={async () => {
-                  await setFieldTouched("email");
-                }}
-                placeholder="E-mail"
-                touched={touched}
-                errors={errors}
-                autoCapitalize="none"
-              />
-              <Space height={30} />
-              <Button title="Confirm" onPress={handleSubmit} />
-              <Space height={100} />
-            </>
-          )}
-        </Formik>
+      <AppContainer style={tw`mt-12`}>
+        <View style={tw`mx-3`}>
+          <Cart width={100} height={100} style={{ alignSelf: "center" }} />
+          <Txt textStyle={{alignSelf: 'center'}} title="Forgot Password" h1 />
+          <Space />
+          <AppForm
+            initialValues={{ email: email || "" }}
+            validationSchema={validationSchema}
+            onSubmit={async (values: { email: string }): Promise<void> => {
+              setLoading(true);
+              try {
+                const { email } = values;
+                const user = await Auth.forgotPassword(email);
+                user &&
+                  router.push({
+                    pathname: "/(auth)/forgot_pass_submit",
+                    params: { email },
+                  });
+                setLoading(false);
+              } catch (err) {
+                setLoading(false)
+                setError(error);
+              }
+            }}
+          >
+            <Field
+              component={InputField}
+              name="email"
+              placeholder="Email "
+              autoCapitalize="none"
+              keyboardType="email-address"
+              textContentType="emailAddress"
+            />
+            <Space height={10} />
+            {error !== "" && (
+              <Txt h3 title={error as string} textStyle={{ color: "red" }} />
+            )}
+            <ButtonSubmit
+              title="Confirm"
+              disabled={loading}
+              loading={loading}
+            />
+          </AppForm>
+        </View>
       </AppContainer>
     </>
   );

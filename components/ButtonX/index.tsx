@@ -11,7 +11,7 @@ interface GradientButtonProps {
   gradientColors: string[];
 }
 
-const GradientButton: React.FC<GradientButtonProps> = ({
+const ButtonX: React.FC<GradientButtonProps> = ({
   title,
   onPress,
   buttonStyle,
@@ -43,4 +43,4 @@ const defaultTextStyle: TextStyle = {
   textAlign: "center",
 };
 
-export default GradientButton;
+export default ButtonX;

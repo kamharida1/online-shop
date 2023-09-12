@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   sub: {
     flex: 1,
     //justifyContent: "center",
-    paddingHorizontal: 10,
+   // paddingHorizontal: 10,
   },
 });
 
@@ -47,7 +47,7 @@ const AppContainer = memo<AppContainerT>(
     style,
     loading = false
   }) => {
-    const MyView = !title ? View : SafeAreaView
+    const MyView = title ? View : SafeAreaView
     const { container, sub } = styles
   return (
     <KeyboardShift>

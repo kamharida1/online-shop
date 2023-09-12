@@ -9,20 +9,19 @@ import tw from "../../../lib/tailwind";
 import useAddressWithObservation from "../../../hooks/useAddressWithObservation";
 import { set } from "lodash";
 
-export default function AddAddress() { 
+export default function AddAddress() {
   const [myAddress, setMyAddress] = useState<Address>(null as any);
   const [addresses, setAddresses] = useState<Address[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   const { address } = useLocalSearchParams<{ address: string }>();
-  
- 
+
   useEffect(() => {
     const fetchAddresses = async () => {
       try {
         setLoading(true);
-        console.log("fetching addresses");
+        // console.log("fetching addresses");
         const userData = await Auth.currentAuthenticatedUser();
         const addresses = (await DataStore.query(Address)).filter(
           (addr) => addr.userSub === userData.attributes.sub
@@ -39,26 +38,24 @@ export default function AddAddress() {
     };
     fetchAddresses();
   }, []);
-  
 
   useEffect(() => {
     const hasAddress = addresses.length > 0;
-    console.log("hasAddress", hasAddress, addresses);
+    //console.log("hasAddress", hasAddress, addresses);
     const myAddress = addresses.find((addr: any) => addr.id === address);
     if (!myAddress) {
       return;
     }
     setMyAddress(myAddress);
-    console.log("myAddress", myAddress);
-  }, [addresses]); 
+    //console.log("myAddress", myAddress);
+  }, [addresses]);
 
   return (
     <AppContainer loading={loading}>
-      <Stack.Screen options={{title: "Add Address"}} />
+      <Stack.Screen options={{ title: "Add Address" }} />
       <>
-        <FormAddress  myAddress={myAddress} />
+        <FormAddress myAddress={myAddress} />
       </>
     </AppContainer>
-  )
-
+  );
 }

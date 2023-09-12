@@ -53,11 +53,10 @@ export default function HomeLayout() {
   return (
     <>
       <Stack
-        screenOptions={
-          {
-            //headerRight: SignOutButton,
-          }
-        }
+        screenOptions={{
+          headerTransparent: true,
+          headerBlurEffect: "systemMaterialLight",
+        }}
       >
         <Stack.Screen
           name="index"
@@ -86,6 +85,7 @@ export default function HomeLayout() {
             }),
           }}
         />
+        
       </Stack>
     </>
   );
