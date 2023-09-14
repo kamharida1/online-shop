@@ -10,48 +10,23 @@ import ImageCarousel from "../../../components/Carousel";
 import { tint } from "../../../constants";
 import { CardProductDetail } from "../../../components/CardProductDetail";
 import { ScrollView } from "react-native-gesture-handler";
+import { useAppDispatch, useAppSelector } from "../../../hooks/redux-hooks";
+import { addToCart, saveCartData } from "../../../redux/cartSlice";
 
 export default function ProductDetail() {
-  const [cartProducts, setCartProducts] = useState<LazyCartProduct[]>([]);
   const [product, setProduct] = useState<Product | undefined>(undefined);
-  const [quantity, setQuantity] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
   const [addedToCart, setAddedToCart] = useState(false);
-
-  const { width } = Dimensions.get("window");
-  const height = (width * 100) / 100 + 130;
-
-
   let [isImageModalVisible, setIsImageModalVisible] = useState(false);
   let [activeIndex, setActiveIndex] = useState(0);
-
+  const { width } = Dimensions.get("window");
+  const height = (width * 100) / 100 + 130;
   const { id } = useLocalSearchParams();
-  const router = useRouter();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (!id) return;
     DataStore.query(Product, id as string).then(setProduct);
   }, [id]);
-
-  const fetchCartProducts = async () => {
-    try {
-      const userData = await Auth.currentAuthenticatedUser();
-      DataStore.query(CartProduct, (cp) =>
-        cp.userSub.eq(userData.attributes.sub)
-      ).then(setCartProducts);
-    } catch (error) {
-      console.warn("Error fetching cart products:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchCartProducts();
-  }, []);
-
-  //console.log("Product:", product?.productDetails);
-  //const productDetails = product?.productDetails;
-
-  //console.log("Product Details Object:", productDetails);
 
   const handleImagePress = useCallback(
     (index: number): void => {
@@ -61,48 +36,18 @@ export default function ProductDetail() {
     [isImageModalVisible, activeIndex]
   );
 
+
   const onAddToCart = async () => {
-    const userData = await Auth.currentAuthenticatedUser();
-
-    if (!product || !userData) {
-      return;
-    }
-
-    //setAddedToCart(true);
-
-    // Check if the product already exists in the cart
-    const existingCartProduct = cartProducts.find(
-      (cp) => cp.productID === product.id
-    );
-
-    if (existingCartProduct) {
-      // If the product already exists, update the quantity
-      const updatedQuantity = existingCartProduct.quantity + 1;
-
-      // Create a new instace of CartProduct with the updated quantity
-      const updatedCartProduct = CartProduct.copyOf(
-        existingCartProduct,
-        (updated) => {
-          // (updated.userSub = userData.attributes.sub),
-          (updated.quantity = updatedQuantity),
-            (updated.productID = product.id);
-        }
-      );
-
-      await DataStore.save(updatedCartProduct);
-    } else {
-      const newCartProduct = new CartProduct({
-        userSub: userData.attributes.sub,
-        quantity,
-        productID: product.id,
-      });
-      await DataStore.save(newCartProduct);
-    }
-    // setTimeout(() => {
-    //   setAddedToCart(false);
-    // }, 60000);
-    //router.push("/cart");
+    setAddedToCart(true);
+    dispatch(addToCart(product as any));
+    dispatch(saveCartData());
+    setTimeout(() => {
+      setAddedToCart(false);
+    }, 6000)
   };
+
+  const cart = useAppSelector((state) => state.cart.cart);
+  console.log(cart);
 
   return (
     <ScrollView
@@ -319,7 +264,7 @@ export default function ProductDetail() {
         </Text>
       )}
       <Pressable
-        onPress={() => onAddToCart()}
+        onPress={onAddToCart}
         style={{
           backgroundColor: "#FFC72C",
           padding: 15,

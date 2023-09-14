@@ -2,60 +2,38 @@ import { Auth, DataStore } from "aws-amplify";
 import { CartProduct, Product } from "../../src/models";
 import { Image, Pressable, Text, View } from "react-native";
 import tw from "twrnc";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 
 import React, { useEffect, useState } from "react";
 
-import { AnimatePresence, MotiView } from "moti";
+import { AnimatePresence,} from "moti";
 import CardAnimated from "../CardAnimated";
-import { card, lightGray, primary, success } from "../../constants";
 import formatPrice from "../../utils/naira_price";
 import QuantitySelector from "../QuantitySelector";
-import { Txt } from "../Txt";
+import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
+import { decrementQuantity, incrementQuantity, removeFromCart, saveCartData } from "../../redux/cartSlice";
 
-interface CartProductItemProps {
-  cartItem: CartProduct;
-  onDeleteItem: any;
-}
 
-const CartProductItem = ({ cartItem, onDeleteItem }: CartProductItemProps) => {
-  const [product, setProduct] = useState<Product | null>(null);
-  //console.warn(cartItem);
-  const { productID, ...cartProduct } = cartItem;
 
-  //console.warn(productID);
+const CartProductItem = ({ cartItem }: any) => {
+  //const cart = useAppSelector((state) => state.cart.cart);
 
-  useEffect(() => {
-    findProduct();
-  }, []);
+  const { product } = cartItem;
 
-  const findProduct = async () => {
-    await DataStore.query(Product, productID).then(setProduct as any);
+  const dispatch = useAppDispatch();
+
+  const increaseQuantity = (item: any) => {
+    dispatch(incrementQuantity(item));
+    dispatch(saveCartData());
   };
-
-  // const deleteItem = async (id: string) => {
-  //   const toDelete = await DataStore.query(CartProduct, id);
-  //   if (toDelete) {
-  //     DataStore.delete(toDelete);
-  //   }
-  // };
-
-  const updateQuantity = async (newQuantity: number) => {
-     const userData = await Auth.currentAuthenticatedUser();
-
-     if (!product || !userData) {
-       return;
-     }
-    const original: any = await DataStore.query(CartProduct, cartProduct.id);
-
-    await DataStore.save(
-      CartProduct.copyOf(original, (updated) => {
-        updated.quantity = newQuantity;
-        updated.productID = product?.id;
-      })
-    );
+  const decreaseQuantity = (item: any) => {
+    dispatch(decrementQuantity(item));
+    dispatch(saveCartData());
   };
-
+  const deleteItem = (item: any) => {
+    dispatch(removeFromCart(item));
+    dispatch(saveCartData());
+  };
   return (
     <AnimatePresence exitBeforeEnter>
       <View style={{ marginHorizontal: 10 }}>
@@ -104,14 +82,65 @@ const CartProductItem = ({ cartItem, onDeleteItem }: CartProductItemProps) => {
               // backgroundColor: "#F8F6",
             }}
           >
-            <QuantitySelector
-              cartItem={cartItem}
-              quantity={cartProduct.quantity}
-              setQuantity={updateQuantity}
-            />
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                paddingHorizontal: 10,
+                paddingVertical: 5,
+                borderRadius: 7,
+              }}
+            >
+              {cartItem?.quantity > 1 ? (
+                <Pressable
+                  onPress={() => decreaseQuantity(product)}
+                  style={{
+                    backgroundColor: "#D8D8D8",
+                    padding: 7,
+                    borderTopLeftRadius: 6,
+                    borderBottomLeftRadius: 6,
+                  }}
+                >
+                  <AntDesign name="minus" size={24} color="black" />
+                </Pressable>
+              ) : (
+                <Pressable
+                  onPress={() => deleteItem(product)}
+                  style={{
+                    backgroundColor: "#D8D8D8",
+                    padding: 7,
+                    borderTopLeftRadius: 6,
+                    borderBottomLeftRadius: 6,
+                  }}
+                >
+                  <AntDesign name="delete" size={24} color="black" />
+                </Pressable>
+              )}
 
+              <Pressable
+                style={{
+                  backgroundColor: "white",
+                  paddingHorizontal: 18,
+                  paddingVertical: 6,
+                }}
+              >
+                <Text>{cartItem?.quantity}</Text>
+              </Pressable>
+
+              <Pressable
+                onPress={() => increaseQuantity(product)}
+                style={{
+                  backgroundColor: "#D8D8D8",
+                  padding: 7,
+                  borderTopLeftRadius: 6,
+                  borderBottomLeftRadius: 6,
+                }}
+              >
+                <Feather name="plus" size={24} color="black" />
+              </Pressable>
+            </View>
             <Pressable
-              onPress={() => onDeleteItem(cartProduct.id)}
+              onPress={() => deleteItem(product)}
               style={{
                 backgroundColor: "white",
                 paddingHorizontal: 8,
@@ -124,6 +153,7 @@ const CartProductItem = ({ cartItem, onDeleteItem }: CartProductItemProps) => {
               <Text>Delete</Text>
             </Pressable>
           </Pressable>
+
           <Pressable
             style={{
               flexDirection: "row",

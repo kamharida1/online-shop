@@ -1,7 +1,6 @@
 import "react-native-gesture-handler";
 import "@azure/core-asynciterator-polyfill";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Provider as ReduxProvider } from "react-redux";
 
 import { useFonts } from "expo-font";
 import { Slot, SplashScreen, Stack, Tabs } from "expo-router";
@@ -9,10 +8,15 @@ import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { ExpoSQLiteAdapter } from "@aws-amplify/datastore-storage-adapter/ExpoSQLiteAdapter";
 
-import { Provider } from "../context/authContext";
+import { Provider } from "react-redux";
+import { persistor, store } from "../redux/store";
+
+
 import { Amplify, DataStore } from "aws-amplify";
 
 import config from "../src/aws-exports";
+import { PersistGate } from "redux-persist/integration/react";
+
 Amplify.configure(config);
 
 DataStore.configure({
@@ -68,9 +72,13 @@ function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
-    <Stack>
-      <Stack.Screen name="(app)" options={{ headerShown: false}} />
-      <Stack.Screen name="(auth)" options={{ headerShown: false}}/>
-  </Stack>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <Stack>
+          <Stack.Screen name="(app)" options={{ headerShown: false }} />
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        </Stack>
+      </PersistGate>
+    </Provider>
   );
 }
