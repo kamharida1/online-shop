@@ -4,7 +4,19 @@ import { LazyLoading, LazyLoadingDisabled, AsyncItem } from "@aws-amplify/datast
 
 
 
+type EagerImageObject = {
+  readonly url: string;
+  readonly originalUri: string;
+}
 
+type LazyImageObject = {
+  readonly url: string;
+  readonly originalUri: string;
+}
+
+export declare type ImageObject = LazyLoading extends LazyLoadingDisabled ? EagerImageObject : LazyImageObject
+
+export declare const ImageObject: (new (init: ModelInit<ImageObject>) => ImageObject)
 
 type EagerProduct = {
   readonly [__modelMeta__]: {
@@ -14,8 +26,8 @@ type EagerProduct = {
   readonly id: string;
   readonly title: string;
   readonly description?: string | null;
-  readonly image?: string | null;
-  readonly images: string[];
+  readonly image?: ImageObject | null;
+  readonly images: ImageObject[];
   readonly options?: string[] | null;
   readonly category?: string | null;
   readonly avgRating?: number | null;
@@ -42,8 +54,8 @@ type LazyProduct = {
   readonly id: string;
   readonly title: string;
   readonly description?: string | null;
-  readonly image?: string | null;
-  readonly images: string[];
+  readonly image?: ImageObject | null;
+  readonly images: ImageObject[];
   readonly options?: string[] | null;
   readonly category?: string | null;
   readonly avgRating?: number | null;

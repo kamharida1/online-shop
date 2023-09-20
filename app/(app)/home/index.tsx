@@ -13,15 +13,13 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { CardProduct } from "../../../components/CardProduct";
 import { DataStore } from "aws-amplify";
+import { useProductStore } from "../../../context/useProductStore";
 
 const PlaceholderImageSource = "https://picsum.photos/200/300";
 
 export default function Products() {
-  const [products, setProducts] = useState<Product[]>([]);
+    const { products } = useProductStore();
 
-  useEffect(() => {
-    DataStore.query(Product).then(setProducts);
-  }, []);
 
   if (!products) {
     return (
@@ -38,17 +36,12 @@ export default function Products() {
 }
 
 function useQueriedProducts() {
-  const [products, setProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    DataStore.query(Product).then(setProducts);
-  }, []);
-
+  const { products } = useProductStore();
   const { q } = useLocalSearchParams<{ q: string }>();
 
   return useMemo(
     () =>
-      products.filter((item: any) => {
+      products.filter((item) => {
         if (!q) {
           return true;
         }
@@ -56,7 +49,8 @@ function useQueriedProducts() {
       }),
     [q, products]
   );
-}
+};
+
 
 function ProductsList() {
   const products = useQueriedProducts();
@@ -77,15 +71,15 @@ function ProductsList() {
     <FlatList
       contentInsetAdjustmentBehavior="automatic"
       scrollEventThrottle={16}
-      contentContainerStyle={{ backgroundColor: "white", paddingBottom: 20 }}
+      contentContainerStyle={{ backgroundColor: "white", paddingBottom: 60 }}
       data={products}
-      keyExtractor={(item) => item.id}
+      keyExtractor={(item) => item.title}
       renderItem={({ item }) => <CardProduct item={item} />}
       numColumns={2}
       ListEmptyComponent={ListEmptyComponent}
-      ListHeaderComponent={() => (
-        <Button title="Sync" onPress={() => handleSyncClick()} />
-      )}
+      // ListHeaderComponent={() => (
+      //   <Button title="Sync" onPress={() => handleSyncClick()} />
+      // )}
     />
   );
 }
@@ -108,15 +102,18 @@ function ListEmptyComponent() {
   }, [q]);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text style={{ fontSize: 16, textAlign: "center" }}>{message}</Text>
-      <Button title="Sync" onPress={handleSyncClick} />
+    // <View
+    //   style={{
+    //     flex: 1,
+    //     justifyContent: "center",
+    //     alignItems: "center",
+    //   }}
+    // >
+    //   <Text style={{ fontSize: 16, textAlign: "center" }}>{message}</Text>
+    //   <Button title="Sync" onPress={handleSyncClick} />
+    // </View>
+    <View style={{flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <ActivityIndicator />
     </View>
   );
 }

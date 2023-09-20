@@ -17,16 +17,17 @@ import { Space } from "../../../components/Space";
 import { getAvailableSubtypes } from "../../../utils/generateSubtypes";
 import DynamicForm from "../../../components/FormDyamic";
 import { generateFieldsForCategory } from "../../../utils/generateFieldsForCategory";
-import ProgressBar from "../../../components/ProgressBar";
 import { Txt } from "../../../components/Txt";
 import { s } from "react-native-size-matters";
+import { get, set } from "lodash";
 const { width } = Dimensions.get("window");
 
 export default function Compose() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [uploadedImages, setUploadedImages] = useState<{ url: string,  originalUri: string}[]>([]);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState<{url: string,  originalUri: string}>({url: "", originalUri: ""});
   const [category, setCategory] = useState("");
   const [avgRating, setAvgRating] = useState("0");
   const [ratings, setRatings] = useState("0");
@@ -45,15 +46,21 @@ export default function Compose() {
 
   const s3BucketUrl = `https://online-shop-storage-9142dc3edev-dev.s3.us-east-2.amazonaws.com/public/`;
 
+  let imageId = 0;
+
+  // function getImageId() {
+  //   return `Image-${imageId++}`;
+  // }
+
   const router = useRouter();
 
   const handleCreateProduct = async () => {
     const product = {
       title,
       description,
-      images: selectedImages,
+      images: uploadedImages,
       options,
-      image,
+      image: uploadedImages[0],
       ratings: parseFloat(ratings),
       category,
       avgRating: parseFloat(avgRating),
@@ -70,7 +77,7 @@ export default function Compose() {
     setTitle("");
     setDescription("");
     setSelectedImages([]);
-    setImage("");
+    setImage({url: "", originalUri: ""});
     setCategory("");
     setAvgRating("0");
     setRatings("0");
@@ -108,7 +115,11 @@ export default function Compose() {
     });
 
     if (!result.canceled) {
+      // const selectedImagesData = result.assets.map(({ uri }) => ({ uri }));
       setSelectedImages(result.assets.map(({ uri }) => uri));
+      // console.log(selectedImagesData);
+      //setSelectedImages(selectedImagesData);
+      //uploadImages(selectedImagesData);
     } else {
       alert("You did not select any image.");
     }
@@ -120,44 +131,69 @@ export default function Compose() {
     return blob;
   };
 
-  const uploadResource = async (uri: any) => {
+  const uploadResourceToS3 = async (uri: any) => { 
     const img = await fetchResourceFromURI(uri);
-    setisLoading(true);
-    return Storage.put(uri, img, {
+    const key = `${Date.now()}.jpg`;
+    const res = await Storage.put(key, img, {
       progressCallback(progress) {
         setProgressText(
           `Uploading:  ${Math.round((progress.loaded / progress.total) * 100)}%`
         );
         console.log(`Progress: ${progress.loaded}/${progress.total}`);
       },
-    })
-      .then((res) => {
-        setProgressText("Upload Successful");
-        // setSelectedImages([]);
-        Storage.get(res.key).then((result) => {
-          result;
-          //console.log(result);
-          setisLoading(false);
-          // setSelectedImages((selectedImages) => [...selectedImages, result as string]);
-        });
-      })
-      .catch((err) => {
-        setProgressText("Upload Error");
-        console.log(err);
-      });
-  };
+    });
+    return res.key;
+  }
 
-  const uploadImages = async () => {
+  const uploadImages = async () => { 
+    const uploadedImageUrls = [];
     setisLoading(true);
     try {
-      selectedImages.map(async (uri) => await uploadResource(uri));
-      setSelectedImages([...selectedImages]);
+      for (const uri of selectedImages) {
+        const key = await uploadResourceToS3(uri);
+        uploadedImageUrls.push({ url: `${s3BucketUrl}${key}`, originalUri: uri });
+      }
+      setProgressText("Upload Successful");
+      setUploadedImages(uploadedImageUrls);
+      console.log(uploadedImageUrls);
       setisLoading(false);
     } catch (err) {
-      console.error("Upload Error:", err);
-      setisLoading(false);
+      
     }
-  };
+  }
+
+  // const uploadImages = async (images: any[]) => { 
+  //   const uploadedImageUrls = [];
+
+  //   try {
+  //     for (const imageData of images) {
+  //       const img = await fetchResourceFromURI(imageData.uri);
+  //       setisLoading(true);
+
+  //       const filekey = getImageId();
+
+  //       const res = await Storage.put(filekey, img, {
+  //         progressCallback(progress) {
+  //           setProgressText(
+  //             `Uploading:  ${Math.round((progress.loaded / progress.total) * 100)}%`
+  //           );
+  //           console.log(`Progress: ${progress.loaded}/${progress.total}`);
+  //         },
+  //       });
+  //       // uploadedImageUrls.push(`${s3BucketUrl}${res.key}`);
+  //       uploadedImageUrls.push({ url: `${s3BucketUrl}${res.key}`, originalUrl: imageData.uri });
+  //       // uploadedImageUrls.push({ url: res.key, originalUrl: imageData.uri, key: res.key });
+  //     }
+  //     setProgressText("Upload Successful");
+  //     console.log(uploadedImageUrls);
+  //     setUploadedImages(uploadedImageUrls);
+  //     setisLoading(false);
+  //   } catch (err) {
+  //     console.error("Upload Error:", err);
+  //     setisLoading(false);
+  //     return;
+  //   }
+  // }
 
   const showIconPlatform =
     Platform.OS === "android" ? (

@@ -31,7 +31,7 @@ const CardOrderItem = memo<CardOrderItemProps>(({ orderItem }) => {
       <CardAnimated style={tw`flex-row overflow-hidden`}>
         <View style={tw`flex-1 flex-row items-center`}>
           <Image
-            source={{ uri: product?.images[0] }}
+            source={{ uri: product?.images[0].originalUri }}
             style={tw.style(
               { width: 100, height: 100, borderRadius: 50, marginRight: 20 })}
           />

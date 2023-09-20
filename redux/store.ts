@@ -1,29 +1,34 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import cartReducer from './cartSlice';
+import wishlistReducer from './wishlistSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persistReducer, persistStore } from 'redux-persist';
+import thunk from 'redux-thunk';
 
 
-const rootReducer = {
-  cart: cartReducer,
-  
-  // Add other reducers if needed
-};
-
-const persistConfig = {
+const cartPersistConfig = {
   key: 'root',
   storage: AsyncStorage,
   whitelist: ['cart'],
 };
+const wishlistPersistConfig = {
+  key: 'root',
+  storage: AsyncStorage,
+  whitelist: ['wishlist'],
+};
 
 
-const persistedReducer = persistReducer(persistConfig, cartReducer);
+const cartPersistedReducer = persistReducer(cartPersistConfig, cartReducer);
+const wishlistPersistedReducer = persistReducer(wishlistPersistConfig, wishlistReducer);
 
 export const store = configureStore({
   reducer: {
-    cart: persistedReducer,
-    // devTools: process.env.NODE_ENV !== 'production',
-  }
+    cart: cartPersistedReducer,
+    wishlist: wishlistPersistedReducer,
+  },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+    serializableCheck: false,
+  }).concat(thunk)
 });
 
 export const persistor = persistStore(store);

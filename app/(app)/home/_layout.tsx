@@ -1,10 +1,10 @@
 import { Link, Stack, useRouter } from "expo-router";
-import { StatusBar } from "expo-status-bar";
 import { Button, Platform, Pressable } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
 import Toast from "react-native-root-toast";
+// import { ProductsProvider } from "@/contexts/products/products";
 
-import { useAuthenticator } from "@aws-amplify/ui-react-native";
+
 import { Text } from "react-native";
 import { DataStore } from "aws-amplify";
 
@@ -59,7 +59,7 @@ export default function HomeLayout() {
         }}
       >
         <Stack.Screen
-          name="index"
+          name="main"
           options={{
             title: "Products",
             headerRight: ComposeButton,
@@ -85,7 +85,6 @@ export default function HomeLayout() {
             }),
           }}
         />
-        
       </Stack>
     </>
   );

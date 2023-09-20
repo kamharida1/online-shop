@@ -8,6 +8,7 @@ import FormAddress from "../../../components/FormAddress.tsx";
 import tw from "../../../lib/tailwind";
 import useAddressWithObservation from "../../../hooks/useAddressWithObservation";
 import { set } from "lodash";
+import FormAdd from "../../../components/FormAdd";
 
 export default function AddAddress() {
   const [myAddress, setMyAddress] = useState<Address>(null as any);
@@ -54,7 +55,8 @@ export default function AddAddress() {
     <AppContainer loading={loading}>
       <Stack.Screen options={{ title: "Add Address" }} />
       <>
-        <FormAddress myAddress={myAddress} />
+        {/* <FormAddress myAddress={myAddress} /> */}
+        <FormAdd myAddress={myAddress} />
       </>
     </AppContainer>
   );

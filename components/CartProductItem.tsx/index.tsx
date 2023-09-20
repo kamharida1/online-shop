@@ -1,22 +1,17 @@
-import { Auth, DataStore } from "aws-amplify";
-import { CartProduct, Product } from "../../src/models";
 import { Image, Pressable, Text, View } from "react-native";
-import tw from "twrnc";
-import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign, Feather,  } from "@expo/vector-icons";
 
 import React, { useEffect, useState } from "react";
 
 import { AnimatePresence,} from "moti";
 import CardAnimated from "../CardAnimated";
 import formatPrice from "../../utils/naira_price";
-import QuantitySelector from "../QuantitySelector";
-import { useAppDispatch, useAppSelector } from "../../hooks/redux-hooks";
-import { decrementQuantity, incrementQuantity, removeFromCart, saveCartData } from "../../redux/cartSlice";
+import { useAppDispatch,  } from "../../hooks/redux-hooks";
+import { decrementQuantity, incrementQuantity, removeFromCart } from "../../redux/cartSlice";
 
 
 
 const CartProductItem = ({ cartItem }: any) => {
-  //const cart = useAppSelector((state) => state.cart.cart);
 
   const { product } = cartItem;
 
@@ -24,16 +19,14 @@ const CartProductItem = ({ cartItem }: any) => {
 
   const increaseQuantity = (item: any) => {
     dispatch(incrementQuantity(item));
-    dispatch(saveCartData());
   };
   const decreaseQuantity = (item: any) => {
     dispatch(decrementQuantity(item));
-    dispatch(saveCartData());
   };
   const deleteItem = (item: any) => {
     dispatch(removeFromCart(item));
-    dispatch(saveCartData());
   };
+
   return (
     <AnimatePresence exitBeforeEnter>
       <View style={{ marginHorizontal: 10 }}>
@@ -47,7 +40,8 @@ const CartProductItem = ({ cartItem }: any) => {
           >
             <View>
               <Image
-                source={{ uri: product?.images[0] }}
+                source={{ uri: product?.images[0].originalUri }}
+                // source={{ uri: product?.image.originalUri }}
                 style={{ width: 140, height: 140, resizeMode: "contain" }}
               />
             </View>

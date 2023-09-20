@@ -2,8 +2,8 @@ type Product @model @auth(rules: [{allow: public}, {allow: owner}]) {
   id: ID!
   title: String!
   description: String
-  image: String
-  images: [String!]!
+  image: ImageObject
+  images: [ImageObject!]!
   options: [String!]
   category: String
   avgRating: Float
@@ -16,6 +16,11 @@ type Product @model @auth(rules: [{allow: public}, {allow: owner}]) {
   OrderProduct: OrderProduct @hasOne
   productDetails: AWSJSON
   subtype: String
+}
+
+type ImageObject {
+  url: String!
+  originalUri: String!
 }
 
 type CartProduct @model @auth(rules: [{allow: public}, {allow: owner}]) {

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { CartProduct, LazyCartProduct, Product } from "../../../src/models";
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { Stack, router, useLocalSearchParams, useRouter } from "expo-router";
 import { Auth, DataStore } from "aws-amplify";
 import { AntDesign, Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import {  Dimensions, ImageBackground, Pressable, Text, View } from "react-native";
@@ -11,7 +11,9 @@ import { tint } from "../../../constants";
 import { CardProductDetail } from "../../../components/CardProductDetail";
 import { ScrollView } from "react-native-gesture-handler";
 import { useAppDispatch, useAppSelector } from "../../../hooks/redux-hooks";
-import { addToCart, saveCartData } from "../../../redux/cartSlice";
+import { addToCart } from "../../../redux/cartSlice";
+import { addToWishList, removeFromWishList } from "../../../redux/wishlistSlice";
+import { ButtonOutline } from "../../../components/ButtonOutline";
 
 export default function ProductDetail() {
   const [product, setProduct] = useState<Product | undefined>(undefined);
@@ -22,6 +24,19 @@ export default function ProductDetail() {
   const height = (width * 100) / 100 + 130;
   const { id } = useLocalSearchParams();
   const dispatch = useAppDispatch();
+  const [isWishlisted, setIsWishlisted] = useState(false);
+
+  const products = useAppSelector((state) => state.wishlist.wishlist);
+
+  const toggleWishlist = () => {
+    if (isWishlisted) {
+      dispatch(removeFromWishList(product));
+    } else {
+      // if(products.includes(product as any)) return;
+      dispatch(addToWishList(product));
+    }
+    setIsWishlisted(!isWishlisted);
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -36,18 +51,16 @@ export default function ProductDetail() {
     [isImageModalVisible, activeIndex]
   );
 
-
   const onAddToCart = async () => {
     setAddedToCart(true);
     dispatch(addToCart(product as any));
-    dispatch(saveCartData());
     setTimeout(() => {
       setAddedToCart(false);
-    }, 6000)
+    }, 6000);
   };
 
-  const cart = useAppSelector((state) => state.cart.cart);
-  console.log(cart);
+  // const cart = useAppSelector((state) => state.cart);
+  // console.log(cart);
 
   return (
     <ScrollView
@@ -60,9 +73,8 @@ export default function ProductDetail() {
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         {product?.images.map((item, index) => (
           <ImageBackground
-            style={{ width, height, marginTop: 25, }}
-            
-            source={{ uri: item }}
+            style={{ width, height, marginTop: 25 }}
+            source={{ uri: item.originalUri }}
             key={index}
           >
             <View
@@ -115,7 +127,8 @@ export default function ProductDetail() {
               </View>
             </View>
 
-            <View
+            <Pressable
+              onPress={toggleWishlist}
               style={{
                 width: 40,
                 height: 40,
@@ -129,7 +142,33 @@ export default function ProductDetail() {
                 marginBottom: 20,
               }}
             >
-              <AntDesign name="hearto" size={24} color="black" />
+              {isWishlisted && products.includes(product) ? (
+                <AntDesign name="heart" size={24} color="red" />
+              ) : (
+                <AntDesign name="hearto" size={24} color="black" />
+              )}
+            </Pressable>
+            <View
+              style={{
+                position: "absolute",
+                bottom: 20,
+                right: 20,
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+              }}
+            >
+              <ButtonOutline
+                style={{ borderColor: "white", borderWidth: 1, borderRadius: 10, padding: 10, marginRight: 10 }}
+                textStyle={{ color: "white", fontSize: 17, fontWeight: "600" }}
+                title="Go to Wishlist"
+                onPress={() =>
+                  router.push({
+                    pathname: "/(app)/home/wishlist",
+                    params: { wishlisted: isWishlisted.toString() },
+                  })
+                }
+              />
             </View>
           </ImageBackground>
         ))}
@@ -303,7 +342,7 @@ export default function ProductDetail() {
       </Pressable>
       <ImageModal
         activeIndex={activeIndex}
-        images={product?.images}
+        images={product?.images.map((item) => item.originalUri) as any}
         isVisible={isImageModalVisible}
         setVisible={setIsImageModalVisible}
       />

@@ -6,7 +6,7 @@ import { Image, ImageBackground, Pressable, StyleSheet, Text, View } from "react
 import formatPrice from "../../utils/naira_price";
 import { Txt } from "../Txt";
 import tw from "../../lib/tailwind";
-import { LazyProduct } from "../../src/models";
+import { LazyProduct, Product } from "../../src/models";
 
 const styles = StyleSheet.create({
   container: {
@@ -29,14 +29,14 @@ const styles = StyleSheet.create({
 });
 
 interface CardProductT {
-  item: LazyProduct
+  item: LazyProduct ;
 }
 
 const CardProduct = memo<CardProductT>(({ item }) => {
   if (!item) {
     return null; // or some fallback JSX if needed
   }
-  const { id, images, title, price, oldPrice } = item
+  const { id, images, title, price, image } = item
   const { container, imageStyle, textStyle } = styles;
 
   const onPress = () => {
@@ -46,16 +46,20 @@ const CardProduct = memo<CardProductT>(({ item }) => {
   return (
     
       <Pressable onPress={onPress}  style={container}>
-          <ImageBackground source={{ uri: images[0] }} style={imageStyle}>
-            <BlurView style={{ padding: 8 }} intensity={50} tint="dark">
-              <Txt textStyle={{ color: "#fff", fontWeight:"800" }} h5 title={title} />
-              <Txt
-                textStyle={{ color: "#fff" }}
-                h5
-                title={formatPrice(price)}
-              />
-            </BlurView>
-          </ImageBackground>
+        <ImageBackground
+          source={{ uri: images[0].originalUri }}
+          // source={{ uri: image?.originalUri }}
+          style={imageStyle}
+        >
+          <BlurView style={{ padding: 8 }} intensity={50} tint="dark">
+            <Txt textStyle={{ color: "#fff", fontWeight:"800" }} h5 title={title} />
+            <Txt
+              textStyle={{ color: "#fff" }}
+              h5
+              title={formatPrice(price)}
+            />
+          </BlurView>
+        </ImageBackground>
       </Pressable>
   );
 })

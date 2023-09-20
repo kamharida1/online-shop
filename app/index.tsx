@@ -19,7 +19,7 @@ const Index = () => {
         if (credentials) {
           // const { email, password } = credentials;
           // const user = await Auth.signIn(email as string, password as string);
-          router.replace('/(app)/home')
+          router.replace('/(app)/home/main')
           setLoading(false);
         } else {
           setLoading(false);

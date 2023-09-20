@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Address, LazyAddress } from "../../../src/models";
 import { Auth, DataStore } from "aws-amplify";
 import { View } from "moti";
-import { Stack, router, useRouter } from "expo-router";
+import { Stack, router, useFocusEffect, useRouter } from "expo-router";
 import tw from "../../../lib/tailwind";
 import { Txt } from "../../../components/Txt";
 import { FlatList, Pressable } from "react-native";
@@ -59,12 +59,13 @@ export default function AddressList() {
     }
   }
 
-  // Fetch addresses from DataStore when userSub changes
-  useEffect(() => {
-    if (userSub) {
+  //refresh the addresses when the component comes to the focus ie basically when we navigate back
+  useFocusEffect(
+    useCallback(() => {
       fetchAddresses();
-    }
-  }, [userSub]);
+    }, [])
+  );
+  console.log("addresses", addresses);
 
   // Fetch addresses and update state
   async function fetchAddresses() {

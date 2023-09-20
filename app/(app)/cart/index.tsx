@@ -1,20 +1,17 @@
-import { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, Button, FlatList, Text, View } from "react-native";
-import { CartProduct, LazyCartProduct, Product } from "../../../src/models";
-import { Stack, router, useRouter } from "expo-router";
-import { Auth, DataStore } from "aws-amplify";
-import { Screen } from "../../../components/Screen";
+import { FlatList, Text, View } from "react-native";
+
+import { Stack, router } from "expo-router";
+
 import CartProductItem from "../../../components/CartProductItem.tsx";
 import tw from "../../../lib/tailwind";
 import formatPrice from "../../../utils/naira_price";
 import { Pressable } from "react-native";
 import { AppContainer } from "../../../components/AppContainer";
 import { useAppSelector, useAppDispatch } from "../../../hooks/redux-hooks";
-import { getCartData } from "../../../redux/cartSlice";
 
 export default function Cart() {
   const cart = useAppSelector((state) => state.cart.cart);
-  
+
   const dispatch = useAppDispatch();
 
   // useEffect(() => {
@@ -23,19 +20,21 @@ export default function Cart() {
 
   console.log(cart);
 
-  const total = cart?.map((item) => item.product.price * item.quantity)
+  const total = cart
+    ?.map((item) => item.product.price * item.quantity)
     .reduce((curr, prev) => curr + prev, 0);
-  
-  const quantity = cart?.map((item) => item.quantity)
+
+  const quantity = cart
+    ?.map((item) => item.quantity)
     .reduce((curr, prev) => curr + prev, 0);
-  
- const onCheckout = () => {
-   router.push({
-     pathname: "/(app)/cart/form",
-     params: { total },
-   });
- };
-  
+
+  const onCheckout = () => {
+    router.push({
+      pathname: "/(app)/cart/confirm",
+      params: { total },
+    });
+  };
+
   return (
     <AppContainer flatList>
       <Stack.Screen options={{ title: "Cart" }} />
@@ -44,12 +43,12 @@ export default function Cart() {
         keyExtractor={(item) => item.product.id}
         contentInsetAdjustmentBehavior="automatic"
         contentContainerStyle={tw`pb-8`}
-        renderItem={({ item }) => <CartProductItem  cartItem={item} />}
+        renderItem={({ item }) => <CartProductItem cartItem={item} />}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={() => (
           <View style={tw`p-3 rounded-t-xl overflow-hidden`}>
             <Text style={{ fontSize: 24, fontFamily: "AirBold" }}>
-              Subtotal ({quantity} {quantity <= 1 ? 'item' : 'items'}):{" "}
+              Subtotal ({quantity} {quantity <= 1 ? "item" : "items"}):{" "}
               <Text style={{ color: "#e47911", fontWeight: "bold" }}>
                 {/* {`${"\u20A6"}`} */}
                 {/* {formatCurrency(totalPrice)} */}
