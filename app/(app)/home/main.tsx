@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView, Platform, Pressable, Image } from 'react-native'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Address, Product } from '../../../src/models';
+import { Address, LazyAddress, Product } from '../../../src/models';
 import { categoriesList } from '../../../utils/data';
 import { useProductStore } from '../../../context/useProductStore';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
@@ -220,37 +220,45 @@ export default function Main() {
 
   const cart = useAppSelector((state) => state.cart.cart);
 
-  const addressSheetRef = useRef<BottomSheetModal>(null);
+  // Get the user's selected address
+  useEffect(() => {
+    async function fetchSelectedAddress() {
+      try {
+        const user = await Auth.currentAuthenticatedUser();
+        const userSub = user.attributes.sub;
+        const userAddresses = await DataStore.query(Address, (address) =>
+          address.userSub.eq(userSub)
+        );
+        const selectedAddress = userAddresses.find((a) => a.isSelected);
+        setSelectedAddress(selectedAddress);
+      } catch (error) {
+        console.log("error", error);
+      }
+    }
+    fetchSelectedAddress();
+   }, [ ]);
 
+  const addressSheetRef = useRef<BottomSheetModal>(null);
   const openAddress = () => {
     addressSheetRef.current?.present();
   }
-
-  // Fetch the user's sub when the component mounts
-  useEffect(() => {
-    fetchUserSub();
-  }, []);
-
-  async function fetchUserSub() {
-    try {
-      const user = await Auth.currentAuthenticatedUser();
-      setUserSub(user.attributes.sub);
-    } catch (error) {
-      console.error("Error fetching user sub: ", error);
-    }
-  }
+  const closeAddress = () => { 
+    addressSheetRef.current?.dismiss();
+   }
 
   //refresh the addresses when the component comes to the focus ie basically when we navigate back
   useFocusEffect(
     useCallback(() => {
-      if (userSub) {
-        fetchAddresses();}
-    }, [userSub, ])
+       
+      fetchAddresses();
+    }, [])
   );
 
   // Fetch addresses and update state
   async function fetchAddresses() {
     try {
+      const user = await Auth.currentAuthenticatedUser();
+      const userSub = user.attributes.sub;
       const userAddresses = await DataStore.query(Address, (address) =>
       address.userSub.eq(userSub)
       );
@@ -264,6 +272,31 @@ export default function Main() {
   const onGenderOpen = useCallback(() => {
     setOpen(false);
   }, []);
+
+
+  const selectAddress = async (addressId: string) => {
+    if (selectedAddress?.id !== addressId) {
+      // Deselect the previously selected address if one was selected
+      if (selectedAddress?.id) {
+        const original = await DataStore.query(Address, selectedAddress?.id);
+        const updated = Address.copyOf(original as LazyAddress, (updated) => {
+          updated.isSelected = false;
+        });
+        await DataStore.save(updated);
+      }
+    }
+
+    // Select the new address
+    const original = await DataStore.query(Address, addressId);
+    const updated = Address.copyOf(original as LazyAddress, (updated) => {
+      updated.isSelected = true;
+    });
+    await DataStore.save(updated);
+
+    // Update the UI
+    // setSelectedAddress(addresses.find((a) => a.id === addressId));
+    //router.push(`/(app)/cart/checkout`);
+  };
 
   return (
     <BottomSheetModalProvider>
@@ -568,7 +601,10 @@ export default function Main() {
             {addresses.map((address, index) => (
               <Pressable
                 key={index}
-                onPress={() => setSelectedAddress(address)}
+                onPress={() => {
+                  selectAddress(address.id);
+                  closeAddress();
+                }}
                 style={{
                   width: 140,
                   height: 140,

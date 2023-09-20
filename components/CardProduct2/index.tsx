@@ -64,7 +64,10 @@ const CardProduct2 = memo<CardProduct2T>(({ item }) => {
   };
 
   return (
-    <Pressable style={{ marginHorizontal: 20, marginVertical: 25 }}>
+    <Pressable
+      onPress={onPress}
+      style={{ marginHorizontal: 20, marginVertical: 25 }}
+    >
       <Image
         source={{ uri: image?.originalUri}}
         style={{ width: 150, height: 200, resizeMode: "contain" }}

@@ -148,7 +148,7 @@ const FormAdd = ({ myAddress }: FormAddressProps) => {
           textAlign: "center",
           marginTop: 15,
         }}>
-          Add a new address
+          {myAddress ? "Edit Address" : "Add a New Address"}
         </Text>
       </View>
 
