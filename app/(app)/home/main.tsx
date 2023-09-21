@@ -85,7 +85,7 @@ export default function Main() {
       oldPrice: 25000,
       price: 19000,
       image:
-        "j/images/G/31/wireless_products/ssserene/weblab_wf/xcm_banners_2022_in_bau_wireless_dec_580x800_once3l_v2_580x800_in-en.jpg",
+        "https://images-eu.ssl-images-amazon.com/images/G/31/wireless_products/ssserene/weblab_wf/xcm_banners_2022_in_bau_wireless_dec_580x800_once3l_v2_580x800_in-en.jpg",
       carouselImages: [
         "https://m.media-amazon.com/images/I/61QRgOgBx0L._SX679_.jpg",
         "https://m.media-amazon.com/images/I/61uaJPLIdML._SX679_.jpg",
